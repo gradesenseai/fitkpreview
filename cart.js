@@ -14,7 +14,7 @@
 
 const SHOPIFY_CONFIG = {
   domain: 'faith-in-the-kitchen.myshopify.com', // Your Shopify domain
-  storefrontAccessToken: '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', // Storefront API access token
+  storefrontAccessToken: '843036e6e5826887cff08bb03a6b36b0', // Storefront API access token (Headless channel)
 };
 
 // Map our product IDs to Shopify variant IDs
@@ -46,7 +46,7 @@ let cartUI = null;
 // Initialize Shopify Buy SDK
 // ============================================================
 function initShopify() {
-  if (SHOPIFY_CONFIG.storefrontAccessToken === 'PASTE_YOUR_TOKEN_HERE') {
+  if (!SHOPIFY_CONFIG.storefrontAccessToken || SHOPIFY_CONFIG.storefrontAccessToken === 'PASTE_YOUR_TOKEN_HERE') {
     console.warn('FITK Cart: Shopify not configured. Using placeholder cart.');
     initPlaceholderCart();
     return;
