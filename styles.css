@@ -193,7 +193,8 @@ p {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 1000;
 }
 
@@ -230,7 +231,7 @@ header {
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border);
   position: sticky;
-  top: 0;
+  top: var(--announcement-bar-height);
   z-index: 100;
   height: var(--header-height);
   display: flex;
@@ -377,6 +378,9 @@ header {
 .hero-logo-banner {
   background-color: var(--black);
   padding: 0.5rem 2rem;
+  position: sticky;
+  top: calc(var(--announcement-bar-height) + var(--header-height));
+  z-index: 90;
 }
 
 .home-banner-content {
@@ -862,7 +866,7 @@ header {
 .scripture-block {
   background-color: var(--bg-secondary);
   padding: 0.5rem 1rem;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 1.5rem;
   text-align: center;
 }
 
@@ -1280,6 +1284,9 @@ footer {
 .collection-banner {
   background-color: var(--black);
   padding: 0.5rem 2rem;
+  position: sticky;
+  top: calc(var(--announcement-bar-height) + var(--header-height));
+  z-index: 90;
 }
 
 .collection-banner-content {
@@ -1652,6 +1659,9 @@ footer {
 .mission-banner {
   background-color: var(--black);
   padding: 0.5rem 2rem;
+  position: sticky;
+  top: calc(var(--announcement-bar-height) + var(--header-height));
+  z-index: 90;
 }
 
 .mission-banner-content {
@@ -1676,6 +1686,40 @@ footer {
 }
 
 .mission-banner-word.active {
+  opacity: 1;
+}
+
+/* Contact Banner */
+.contact-banner {
+  background-color: var(--black);
+  padding: 0.5rem 2rem;
+  position: sticky;
+  top: calc(var(--announcement-bar-height) + var(--header-height));
+  z-index: 90;
+}
+
+.contact-banner-content {
+  position: relative;
+  height: 0.7rem;
+}
+
+.contact-banner-word {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-body-regular);
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.contact-banner-word.active {
   opacity: 1;
 }
 
@@ -1708,7 +1752,7 @@ footer {
 
 .mission-intro p {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   font-weight: var(--font-weight-body-regular);
   line-height: 1.85;
   color: var(--text-secondary);
@@ -1820,7 +1864,7 @@ footer {
 
 .mission-build-summary p {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   line-height: 1.85;
   color: var(--text-secondary);
   font-weight: var(--font-weight-body-regular);
@@ -2949,6 +2993,7 @@ footer {
 @media (max-width: 767px) {
   :root {
     --header-height: 60px;
+    --announcement-bar-height: 36px;
     --spacing-section: 2rem;
     --button-padding: 10px 24px;
   }
@@ -2964,13 +3009,14 @@ footer {
   }
 
   .hero-logo-banner {
-    position: sticky;
-    top: 0;
-    z-index: 90;
     padding: 0.4rem 1rem;
   }
 
   .collection-banner {
+    padding: 0.4rem 1rem;
+  }
+
+  .contact-banner {
     padding: 0.4rem 1rem;
   }
 
@@ -3195,6 +3241,10 @@ footer {
     padding: 0.4rem 1rem;
   }
 
+  .contact-banner {
+    padding: 0.4rem 1rem;
+  }
+
   .mission-intro h2 {
     font-size: 1.5rem;
   }
@@ -3217,11 +3267,6 @@ footer {
     gap: 0.75rem;
   }
 
-  /* Announcement bar */
-  .announcement-bar {
-    height: 36px;
-  }
-
   .announcement-marquee span {
     font-size: 0.65rem;
   }
@@ -3233,6 +3278,7 @@ footer {
 @media (max-width: 479px) {
   :root {
     --header-height: 56px;
+    --announcement-bar-height: 32px;
     --button-padding: 8px 16px;
   }
 
@@ -3297,11 +3343,6 @@ footer {
   /* Manifesto */
   .manifesto-heading {
     font-size: 1.4rem;
-  }
-
-  /* Announcement */
-  .announcement-bar {
-    height: 32px;
   }
 
   .announcement-marquee span {

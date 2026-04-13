@@ -56,10 +56,14 @@
     </div>
   </header>
 
-  <!-- Page Banner -->
-  <section style="background-color: var(--bg-secondary); padding: 1.5rem var(--spacing-lg); text-align: center;">
-    <h1>CONTACT US</h1>
-  </section>
+  <!-- Contact Banner -->
+  <div class="contact-banner">
+    <div class="contact-banner-content">
+      <span class="contact-banner-word active">CONTACT <span class="banner-accent">US</span></span>
+      <span class="contact-banner-word">GET IN <span class="banner-accent">TOUCH</span></span>
+      <span class="contact-banner-word">WE'D LOVE TO <span class="banner-accent">HEAR</span></span>
+    </div>
+  </div>
 
   <!-- Contact Section -->
   <section style="padding: 1.5rem 0 2rem;">
@@ -160,6 +164,19 @@
       overlay.classList.toggle('open');
       if (overlay.classList.contains('open')) document.getElementById('search-input').focus();
     }
+
+    // Contact banner word rotator
+    (function() {
+      const words = document.querySelectorAll('.contact-banner-word');
+      if (!words.length) return;
+      let current = 0;
+      setInterval(() => {
+        const next = (current + 1) % words.length;
+        words[current].classList.remove('active');
+        words[next].classList.add('active');
+        current = next;
+      }, 3000);
+    })();
 
     function handleContactSubmit(e) {
       e.preventDefault();
