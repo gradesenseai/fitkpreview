@@ -1,31 +1,12 @@
-// Faith in the Kitchen - Shopify Buy Button SDK Integration
+// Faith in the Kitchen - Shopify Storefront API Integration
 // =========================================================
-// This file handles cart functionality via Shopify's headless checkout.
-//
-// TO ACTIVATE: Replace the placeholder values below with your actual
-// Shopify Storefront Access Token and domain.
-//
-// Steps to get your token:
-// 1. Shopify Admin → Settings → Apps and sales channels
-// 2. Click "Develop apps" → Create an app
-// 3. Configure Storefront API scopes: unauthenticated_read_product_listings,
-//    unauthenticated_write_checkouts, unauthenticated_read_checkouts
-// 4. Install the app and copy the Storefront access token
+// Uses the Storefront API Cart GraphQL endpoints directly.
+// No external SDK required.
 
 const SHOPIFY_CONFIG = {
-  domain: 'faith-in-the-kitchen.myshopify.com', // Your Shopify domain
-  storefrontAccessToken: '843036e6e5826887cff08bb03a6b36b0', // Storefront API access token (Headless channel)
-};
-
-// Map our product IDs to Shopify variant IDs
-// You'll need to fill these in from your Shopify admin
-// Shopify Admin → Products → [Product] → Variants → each variant has a numeric ID
-const SHOPIFY_VARIANT_MAP = {
-  // Format: 'productId-colorCode-size': 'shopifyVariantId'
-  // Example: 'dinkp-heather-olive-M': 'gid://shopify/ProductVariant/12345678'
-  //
-  // These will be populated once we connect to the Shopify Storefront API
-  // For now, we'll use the API to fetch variants dynamically
+  domain: 'faith-in-the-kitchen.myshopify.com',
+  storefrontAccessToken: '843036e6e5826887cff08bb03a6b36b0',
+  apiVersion: '2025-01',
 };
 
 // Shopify product handle map (URL slugs from your Shopify store)
@@ -38,70 +19,105 @@ const SHOPIFY_PRODUCT_HANDLES = {
   'hoodie': 'fitk-flagship-hoodie',
 };
 
-let shopifyClient = null;
-let cart = null;
-let cartUI = null;
+let shopifyCart = null;
+let shopifyReady = false;
 
 // ============================================================
-// Initialize Shopify Buy SDK
+// Storefront API - GraphQL Helper
 // ============================================================
-function initShopify() {
-  if (!SHOPIFY_CONFIG.storefrontAccessToken || SHOPIFY_CONFIG.storefrontAccessToken === 'PASTE_YOUR_TOKEN_HERE') {
-    console.warn('FITK Cart: Shopify not configured. Using placeholder cart.');
+async function storefrontFetch(query, variables) {
+  const url = 'https://' + SHOPIFY_CONFIG.domain + '/api/' + SHOPIFY_CONFIG.apiVersion + '/graphql.json';
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_CONFIG.storefrontAccessToken,
+    },
+    body: JSON.stringify({ query: query, variables: variables }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Storefront API error: ' + response.status);
+  }
+
+  const json = await response.json();
+  if (json.errors) {
+    console.error('Storefront API GraphQL errors:', json.errors);
+    throw new Error(json.errors[0].message);
+  }
+  return json.data;
+}
+
+// ============================================================
+// Initialize - Create or restore a cart
+// ============================================================
+async function initShopify() {
+  if (!SHOPIFY_CONFIG.storefrontAccessToken) {
+    console.warn('FITK Cart: No Storefront API token. Using placeholder cart.');
     initPlaceholderCart();
     return;
   }
 
-  // Load Shopify Buy SDK from CDN
-  const script = document.createElement('script');
-  script.src = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-  script.async = true;
-  script.onload = function() {
-    shopifyClient = ShopifyBuy.buildClient({
-      domain: SHOPIFY_CONFIG.domain,
-      storefrontAccessToken: SHOPIFY_CONFIG.storefrontAccessToken,
-    });
-
-    // Create or restore cart
+  try {
+    // Try to restore existing cart
     const savedCartId = sessionStorage.getItem('fitk_cart_id');
     if (savedCartId) {
-      shopifyClient.checkout.fetch(savedCartId).then(function(checkout) {
-        if (checkout && !checkout.completedAt) {
-          cart = checkout;
-          updateCartCount();
-        } else {
-          createNewCart();
-        }
-      }).catch(function() {
-        createNewCart();
-      });
-    } else {
-      createNewCart();
+      const data = await storefrontFetch(
+        'query($id: ID!) { cart(id: $id) { id checkoutUrl lines(first: 50) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } image { url altText } product { title } selectedOptions { name value } } } } } } cost { subtotalAmount { amount currencyCode } } } }',
+        { id: savedCartId }
+      );
+
+      if (data.cart) {
+        shopifyCart = data.cart;
+        shopifyReady = true;
+        updateCartCount();
+        console.log('FITK Cart: Restored existing cart');
+        return;
+      }
     }
 
-    console.log('FITK Cart: Shopify SDK initialized');
-  };
-  script.onerror = function() {
-    console.error('FITK Cart: Failed to load Shopify SDK');
+    // Create new cart
+    await createNewCart();
+  } catch (err) {
+    console.error('FITK Cart: Failed to initialize Shopify -', err.message);
+    console.log('FITK Cart: Falling back to placeholder cart');
     initPlaceholderCart();
-  };
-  document.head.appendChild(script);
+  }
 }
 
-function createNewCart() {
-  shopifyClient.checkout.create().then(function(checkout) {
-    cart = checkout;
-    sessionStorage.setItem('fitk_cart_id', checkout.id);
-    updateCartCount();
-  });
+async function createNewCart() {
+  const data = await storefrontFetch(
+    'mutation { cartCreate { cart { id checkoutUrl lines(first: 50) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } image { url altText } product { title } selectedOptions { name value } } } } } } cost { subtotalAmount { amount currencyCode } } } userErrors { field message } } }',
+    {}
+  );
+
+  if (data.cartCreate.userErrors.length > 0) {
+    throw new Error(data.cartCreate.userErrors[0].message);
+  }
+
+  shopifyCart = data.cartCreate.cart;
+  shopifyReady = true;
+  sessionStorage.setItem('fitk_cart_id', shopifyCart.id);
+  updateCartCount();
+  console.log('FITK Cart: New cart created');
+}
+
+// ============================================================
+// Fetch product by handle to find variant IDs
+// ============================================================
+async function fetchProductByHandle(handle) {
+  const data = await storefrontFetch(
+    'query($handle: String!) { product(handle: $handle) { id title variants(first: 50) { edges { node { id title availableForSale price { amount currencyCode } selectedOptions { name value } image { url altText } } } } } }',
+    { handle: handle }
+  );
+  return data.product;
 }
 
 // ============================================================
 // Add to Cart
 // ============================================================
-function addToCart(productId, color, size) {
-  if (!shopifyClient) {
-    // Placeholder mode
+async function addToCart(productId, color, size) {
+  if (!shopifyReady) {
     addToPlaceholderCart(productId, color, size);
     return;
   }
@@ -109,23 +125,25 @@ function addToCart(productId, color, size) {
   const handle = SHOPIFY_PRODUCT_HANDLES[productId];
   if (!handle) {
     console.error('FITK Cart: Unknown product ID:', productId);
+    showCartNotification('Product not found.');
     return;
   }
 
-  // Fetch the product from Shopify to get variant IDs
-  shopifyClient.product.fetchByHandle(handle).then(function(product) {
+  try {
+    // Fetch product variants from Shopify
+    const product = await fetchProductByHandle(handle);
     if (!product) {
       console.error('FITK Cart: Product not found on Shopify:', handle);
-      showCartNotification('Product not available. Please try again.');
+      showCartNotification('Product not available.');
       return;
     }
 
-    // Find the matching variant (by size — Shopify variants are typically by size)
-    const variant = product.variants.find(function(v) {
-      return v.title.toLowerCase().includes(size.toLowerCase()) ||
-             v.selectedOptions.some(function(opt) {
-               return opt.name.toLowerCase() === 'size' && opt.value.toLowerCase() === size.toLowerCase();
-             });
+    // Find matching variant by size
+    const variant = product.variants.edges.find(function(edge) {
+      const v = edge.node;
+      return v.selectedOptions.some(function(opt) {
+        return opt.name.toLowerCase() === 'size' && opt.value.toLowerCase() === size.toLowerCase();
+      });
     });
 
     if (!variant) {
@@ -134,23 +152,72 @@ function addToCart(productId, color, size) {
       return;
     }
 
-    // Add to Shopify checkout
-    const lineItemsToAdd = [{
-      variantId: variant.id,
-      quantity: 1,
-    }];
+    if (!variant.node.availableForSale) {
+      showCartNotification('This size is sold out.');
+      return;
+    }
 
-    shopifyClient.checkout.addLineItems(cart.id, lineItemsToAdd).then(function(updatedCheckout) {
-      cart = updatedCheckout;
-      sessionStorage.setItem('fitk_cart_id', cart.id);
-      updateCartCount();
-      showCartNotification('Added to cart');
-      openCartDrawer();
-    });
-  }).catch(function(err) {
-    console.error('FITK Cart: Error adding to cart:', err);
+    // Add line item to cart
+    const data = await storefrontFetch(
+      'mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { id checkoutUrl lines(first: 50) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } image { url altText } product { title } selectedOptions { name value } } } } } } cost { subtotalAmount { amount currencyCode } } } userErrors { field message } } }',
+      {
+        cartId: shopifyCart.id,
+        lines: [{ merchandiseId: variant.node.id, quantity: 1 }],
+      }
+    );
+
+    if (data.cartLinesAdd.userErrors.length > 0) {
+      throw new Error(data.cartLinesAdd.userErrors[0].message);
+    }
+
+    shopifyCart = data.cartLinesAdd.cart;
+    sessionStorage.setItem('fitk_cart_id', shopifyCart.id);
+    updateCartCount();
+    showCartNotification('Added to cart');
+    openCartDrawer();
+
+  } catch (err) {
+    console.error('FITK Cart: Error adding to cart -', err.message);
     showCartNotification('Something went wrong. Please try again.');
-  });
+  }
+}
+
+// ============================================================
+// Remove from Cart
+// ============================================================
+async function removeCartItem(lineItemId) {
+  if (!shopifyReady || !shopifyCart) return;
+
+  try {
+    const data = await storefrontFetch(
+      'mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { id checkoutUrl lines(first: 50) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } image { url altText } product { title } selectedOptions { name value } } } } } } cost { subtotalAmount { amount currencyCode } } } userErrors { field message } } }',
+      {
+        cartId: shopifyCart.id,
+        lineIds: [lineItemId],
+      }
+    );
+
+    if (data.cartLinesRemove.userErrors.length > 0) {
+      throw new Error(data.cartLinesRemove.userErrors[0].message);
+    }
+
+    shopifyCart = data.cartLinesRemove.cart;
+    updateCartCount();
+    renderCartItems();
+  } catch (err) {
+    console.error('FITK Cart: Error removing item -', err.message);
+  }
+}
+
+// ============================================================
+// Checkout - redirect to Shopify checkout
+// ============================================================
+function goToCheckout() {
+  if (shopifyReady && shopifyCart && shopifyCart.checkoutUrl) {
+    window.location.href = shopifyCart.checkoutUrl;
+  } else if (placeholderCart.length > 0) {
+    showCartNotification('Checkout is not available yet. Please try again.');
+  }
 }
 
 // ============================================================
@@ -161,33 +228,33 @@ function createCartDrawer() {
 
   const drawer = document.createElement('div');
   drawer.id = 'cart-drawer';
-  drawer.innerHTML = `
-    <div class="cart-overlay" onclick="closeCartDrawer()"></div>
-    <div class="cart-panel">
-      <div class="cart-header">
-        <h3>Your Cart</h3>
-        <button class="cart-close" onclick="closeCartDrawer()" aria-label="Close cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div class="cart-items" id="cart-items">
-        <p class="cart-empty">Your cart is empty</p>
-      </div>
-      <div class="cart-footer" id="cart-footer" style="display: none;">
-        <div class="cart-subtotal">
-          <span>Subtotal</span>
-          <span id="cart-subtotal-amount">$0.00</span>
-        </div>
-        <button class="btn cart-checkout-btn" id="cart-checkout-btn" onclick="goToCheckout()">
-          Checkout
-        </button>
-        <p class="cart-shipping-note">Shipping calculated at checkout</p>
-      </div>
-    </div>
-  `;
+  drawer.innerHTML = '\
+    <div class="cart-overlay" onclick="closeCartDrawer()"></div>\
+    <div class="cart-panel">\
+      <div class="cart-header">\
+        <h3>Your Cart</h3>\
+        <button class="cart-close" onclick="closeCartDrawer()" aria-label="Close cart">\
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\
+            <line x1="18" y1="6" x2="6" y2="18"></line>\
+            <line x1="6" y1="6" x2="18" y2="18"></line>\
+          </svg>\
+        </button>\
+      </div>\
+      <div class="cart-items" id="cart-items">\
+        <p class="cart-empty">Your cart is empty</p>\
+      </div>\
+      <div class="cart-footer" id="cart-footer" style="display: none;">\
+        <div class="cart-subtotal">\
+          <span>Subtotal</span>\
+          <span id="cart-subtotal-amount">$0.00</span>\
+        </div>\
+        <button class="btn cart-checkout-btn" id="cart-checkout-btn" onclick="goToCheckout()">\
+          Checkout\
+        </button>\
+        <p class="cart-shipping-note">Shipping calculated at checkout</p>\
+      </div>\
+    </div>\
+  ';
   document.body.appendChild(drawer);
 }
 
@@ -211,49 +278,55 @@ function renderCartItems() {
   const container = document.getElementById('cart-items');
   const footer = document.getElementById('cart-footer');
 
-  if (shopifyClient && cart && cart.lineItems.length > 0) {
+  if (shopifyReady && shopifyCart && shopifyCart.lines.edges.length > 0) {
     // Shopify cart
-    container.innerHTML = cart.lineItems.map(function(item) {
-      return `
-        <div class="cart-item">
-          <img src="${item.variant.image ? item.variant.image.src : ''}" alt="${item.title}" class="cart-item-image">
-          <div class="cart-item-details">
-            <h4>${item.title}</h4>
-            <p>${item.variant.title}</p>
-            <p class="cart-item-price">$${parseFloat(item.variant.price.amount).toFixed(2)}</p>
-          </div>
-          <button class="cart-item-remove" onclick="removeCartItem('${item.id}')" aria-label="Remove">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      `;
+    container.innerHTML = shopifyCart.lines.edges.map(function(edge) {
+      var item = edge.node;
+      var merch = item.merchandise;
+      var imgSrc = merch.image ? merch.image.url : '';
+      var options = merch.selectedOptions.map(function(o) { return o.value; }).join(' / ');
+      return '\
+        <div class="cart-item">\
+          ' + (imgSrc ? '<img src="' + imgSrc + '" alt="' + merch.product.title + '" class="cart-item-image">' : '') + '\
+          <div class="cart-item-details">\
+            <h4>' + merch.product.title + '</h4>\
+            <p>' + options + '</p>\
+            <p class="cart-item-price">$' + parseFloat(merch.price.amount).toFixed(2) + '</p>\
+            <p class="cart-item-qty">Qty: ' + item.quantity + '</p>\
+          </div>\
+          <button class="cart-item-remove" onclick="removeCartItem(\'' + item.id + '\')" aria-label="Remove">\
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\
+              <line x1="18" y1="6" x2="6" y2="18"></line>\
+              <line x1="6" y1="6" x2="18" y2="18"></line>\
+            </svg>\
+          </button>\
+        </div>\
+      ';
     }).join('');
 
-    document.getElementById('cart-subtotal-amount').textContent = '$' + parseFloat(cart.subtotalPrice.amount).toFixed(2);
+    document.getElementById('cart-subtotal-amount').textContent = '$' + parseFloat(shopifyCart.cost.subtotalAmount.amount).toFixed(2);
     footer.style.display = 'block';
+
   } else if (placeholderCart.length > 0) {
     // Placeholder cart
-    let subtotal = 0;
+    var subtotal = 0;
     container.innerHTML = placeholderCart.map(function(item, idx) {
       subtotal += item.price;
-      return `
-        <div class="cart-item">
-          <div class="cart-item-details">
-            <h4>${item.name}</h4>
-            <p>${item.size} / ${item.color}</p>
-            <p class="cart-item-price">$${item.price.toFixed(2)}</p>
-          </div>
-          <button class="cart-item-remove" onclick="removePlaceholderItem(${idx})" aria-label="Remove">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      `;
+      return '\
+        <div class="cart-item">\
+          <div class="cart-item-details">\
+            <h4>' + item.name + '</h4>\
+            <p>' + item.size + ' / ' + item.color + '</p>\
+            <p class="cart-item-price">$' + item.price.toFixed(2) + '</p>\
+          </div>\
+          <button class="cart-item-remove" onclick="removePlaceholderItem(' + idx + ')" aria-label="Remove">\
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\
+              <line x1="18" y1="6" x2="6" y2="18"></line>\
+              <line x1="6" y1="6" x2="18" y2="18"></line>\
+            </svg>\
+          </button>\
+        </div>\
+      ';
     }).join('');
 
     document.getElementById('cart-subtotal-amount').textContent = '$' + subtotal.toFixed(2);
@@ -264,44 +337,24 @@ function renderCartItems() {
   }
 }
 
-function removeCartItem(lineItemId) {
-  if (!shopifyClient || !cart) return;
-
-  shopifyClient.checkout.removeLineItems(cart.id, [lineItemId]).then(function(updatedCheckout) {
-    cart = updatedCheckout;
-    updateCartCount();
-    renderCartItems();
-  });
-}
-
-function goToCheckout() {
-  if (shopifyClient && cart) {
-    window.location.href = cart.webUrl;
-  } else {
-    // Placeholder - redirect to Shopify store
-    window.location.href = 'https://' + SHOPIFY_CONFIG.domain + '/cart';
-  }
-}
-
 // ============================================================
 // Cart Count Badge
 // ============================================================
 function updateCartCount() {
-  let count = 0;
+  var count = 0;
 
-  if (shopifyClient && cart) {
-    count = cart.lineItems.reduce(function(total, item) {
-      return total + item.quantity;
+  if (shopifyReady && shopifyCart) {
+    count = shopifyCart.lines.edges.reduce(function(total, edge) {
+      return total + edge.node.quantity;
     }, 0);
   } else {
     count = placeholderCart.length;
   }
 
-  // Update or create badge
-  const cartIcon = document.querySelector('.cart-icon');
+  var cartIcon = document.querySelector('.cart-icon');
   if (!cartIcon) return;
 
-  let badge = document.querySelector('.cart-badge');
+  var badge = document.querySelector('.cart-badge');
   if (count > 0) {
     if (!badge) {
       badge = document.createElement('span');
@@ -320,26 +373,23 @@ function updateCartCount() {
 // Cart Notification
 // ============================================================
 function showCartNotification(message) {
-  // Remove existing notification
-  const existing = document.querySelector('.cart-notification');
+  var existing = document.querySelector('.cart-notification');
   if (existing) existing.remove();
 
-  const notification = document.createElement('div');
+  var notification = document.createElement('div');
   notification.className = 'cart-notification';
-  notification.innerHTML = `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-    <span>${message}</span>
-  `;
+  notification.innerHTML = '\
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\
+      <polyline points="20 6 9 17 4 12"></polyline>\
+    </svg>\
+    <span>' + message + '</span>\
+  ';
   document.body.appendChild(notification);
 
-  // Animate in
   requestAnimationFrame(function() {
     notification.classList.add('show');
   });
 
-  // Remove after 3 seconds
   setTimeout(function() {
     notification.classList.remove('show');
     setTimeout(function() { notification.remove(); }, 300);
@@ -347,13 +397,12 @@ function showCartNotification(message) {
 }
 
 // ============================================================
-// Placeholder Cart (before Shopify is connected)
+// Placeholder Cart (fallback if Shopify API fails)
 // ============================================================
-let placeholderCart = [];
+var placeholderCart = [];
 
 function initPlaceholderCart() {
-  // Load from sessionStorage
-  const saved = sessionStorage.getItem('fitk_placeholder_cart');
+  var saved = sessionStorage.getItem('fitk_placeholder_cart');
   if (saved) {
     try { placeholderCart = JSON.parse(saved); } catch(e) {}
   }
@@ -361,7 +410,7 @@ function initPlaceholderCart() {
 }
 
 function addToPlaceholderCart(productId, color, size) {
-  const product = products.find(function(p) { return p.id === productId; });
+  var product = products.find(function(p) { return p.id === productId; });
   if (!product) return;
 
   placeholderCart.push({
@@ -392,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initShopify();
 
   // Make cart icon clickable
-  const cartIcon = document.querySelector('.cart-icon');
+  var cartIcon = document.querySelector('.cart-icon');
   if (cartIcon) {
     cartIcon.addEventListener('click', function() {
       openCartDrawer();
