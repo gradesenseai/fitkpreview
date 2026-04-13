@@ -1,0 +1,173 @@
+// Faith in the Kitchen - Product Data
+
+// Base path for mockup images
+const MOCKUP_BASE = 'images/mockups/';
+const LOGO_BASE = 'images/logos/';
+
+const products = [
+  {
+    id: 'dinkp',
+    name: 'Dink with Purpose Tee',
+    price: 35,
+    category: 'tee',
+    scripture: 'Colossians 3:23',
+    scriptureText: 'Whatever you do, work at it with all your heart, as working for the Lord.',
+    image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c55ae178453.png',
+    frontImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c55ae178453.png',
+    backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c55ae17c1da.png',
+    colorways: [
+      { name: 'Dark Grey Heather', code: 'heather-grey', image: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-front-69c55ae174abd.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-left-front-69c575768aa26.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-back-69c55ae17bf8a.png' },
+      { name: 'Heather Olive', code: 'heather-olive', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c55ae178453.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-left-front-69c575768ac91.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c55ae17c1da.png' },
+      { name: 'Heather Slate', code: 'heather-slate', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-front-69c55ae17720b.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-left-front-69c575768abe6.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-back-69c55ae17c129.png' },
+      { name: 'Heather Mauve', code: 'heather-mauve', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-front-69c55ae175dfc.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-left-front-69c575768ab3b.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-back-69c55ae17c07b.png' },
+      { name: 'Heather Aqua', code: 'heather-aqua', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-front-69c55ae17a7f4.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-left-front-69c575768addd.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-back-69c55ae17c34a.png' },
+      { name: 'Heather Columbia Blue', code: 'heather-blue', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-front-69c55ae179668.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-left-front-69c575768ad33.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-back-69c55ae17c281.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'Precision at the line. Intention in every point. The front carries a clean, modern mark with a hidden scripture reference embedded in the design. The sleeve spells out the full slogan. Bold clarity to complement the minimal front. Part of the Founder\'s Drop. Built with intention.',
+    details: {
+      material: '52% combed and ring-spun cotton, 48% polyester',
+      weight: '4.2 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'True to size. Fits unisex/standard.'
+    }
+  },
+  {
+    id: 'servp',
+    name: 'Serve with Purpose Tee',
+    price: 35,
+    category: 'tee',
+    scripture: '1 Peter 4:10',
+    scriptureText: 'Each of you should use whatever gift you have received to serve others.',
+    image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c5773e0a057.png',
+    frontImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c5773e0a057.png',
+    backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c5773e0ddbe.png',
+    colorways: [
+      { name: 'Dark Grey Heather', code: 'heather-grey', image: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-front-69c5773e06a8f.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-left-front-69c5773e042f9.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-back-69c5773e0db58.png' },
+      { name: 'Heather Olive', code: 'heather-olive', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c5773e0a057.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-left-front-69c5773e04517.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c5773e0ddbe.png' },
+      { name: 'Heather Slate', code: 'heather-slate', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-front-69c5773e08e02.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-left-front-69c5773e04467.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-back-69c5773e0dcf2.png' },
+      { name: 'Heather Mauve', code: 'heather-mauve', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-front-69c5773e07d37.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-left-front-69c5773e043c6.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-back-69c5773e0dc41.png' },
+      { name: 'Heather Aqua', code: 'heather-aqua', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-front-69c5773e0c54b.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-left-front-69c5773e0465e.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-back-69c5773e0df20.png' },
+      { name: 'Heather Columbia Blue', code: 'heather-blue', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-front-69c5773e0b256.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-left-front-69c5773e045b7.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-back-69c5773e0de6d.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'Every moment at the baseline is an act of conviction. A modern mark meets legacy typography, with an embedded scripture reference making every wear a silent declaration. Whether you\'re on the court or building community, this piece carries weight. Part of the Founder\'s Drop. Built with intention.',
+    details: {
+      material: '52% combed and ring-spun cotton, 48% polyester',
+      weight: '4.2 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'True to size. Fits unisex/standard.'
+    }
+  },
+  {
+    id: 'sgsg',
+    name: 'Soft Game Strong Faith Tee',
+    price: 35,
+    category: 'tee',
+    scripture: '2 Corinthians 12:9',
+    scriptureText: 'My grace is sufficient for you, for my power is made perfect in weakness.',
+    image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c57954b333e.png',
+    frontImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c57954b333e.png',
+    backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c57954b6b2b.png',
+    colorways: [
+      { name: 'Dark Grey Heather', code: 'heather-grey', image: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-front-69c57954b0043.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-left-front-69c57954ade91.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-back-69c57954b6910.png' },
+      { name: 'Heather Olive', code: 'heather-olive', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c57954b333e.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-left-front-69c57954ae0a5.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c57954b6b2b.png' },
+      { name: 'Heather Slate', code: 'heather-slate', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-front-69c57954b234a.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-left-front-69c57954ae007.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-back-69c57954b6a85.png' },
+      { name: 'Heather Mauve', code: 'heather-mauve', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-front-69c57954b1137.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-left-front-69c57954adf65.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-back-69c57954b69d9.png' },
+      { name: 'Heather Aqua', code: 'heather-aqua', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-front-69c57954b54e3.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-left-front-69c57954ae1e7.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-back-69c57954b6c7c.png' },
+      { name: 'Heather Columbia Blue', code: 'heather-blue', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-front-69c57954b4477.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-left-front-69c57954ae140.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-back-69c57954b6bce.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'The soft game wins rallies. But only faith wins the match. This design captures the tension between finesse and conviction. The player who controls the net while standing firm in something deeper. Understated front. Bold statement on the back. Part of the Founder\'s Drop. Built with intention.',
+    details: {
+      material: '52% combed and ring-spun cotton, 48% polyester',
+      weight: '4.2 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'True to size. Fits unisex/standard.'
+    }
+  },
+  {
+    id: '4glory',
+    name: 'For His Glory Tee',
+    price: 35,
+    category: 'tee',
+    scripture: '1 Corinthians 10:31',
+    scriptureText: 'So whether you eat or drink or whatever you do, do it all for the glory of God.',
+    image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c572b1c7ca1.png',
+    frontImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c572b1c7ca1.png',
+    backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c572b1ca641.png',
+    colorways: [
+      { name: 'Dark Grey Heather', code: 'heather-grey', image: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-front-69c572b1c526d.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-left-front-69c572b1c2b11.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-back-69c572b1ca3c2.png' },
+      { name: 'Heather Olive', code: 'heather-olive', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c572b1c7ca1.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-left-front-69c572b1c2ef9.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c572b1ca641.png' },
+      { name: 'Heather Slate', code: 'heather-slate', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-front-69c572b1c6f14.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-left-front-69c572b1c2dce.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-back-69c572b1ca589.png' },
+      { name: 'Heather Mauve', code: 'heather-mauve', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-front-69c572b1c6161.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-left-front-69c572b1c2c99.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-back-69c572b1ca491.png' },
+      { name: 'Heather Aqua', code: 'heather-aqua', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-front-69c572b1c9673.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-left-front-69c572b1c3148.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-back-69c572b1ca7b7.png' },
+      { name: 'Heather Columbia Blue', code: 'heather-blue', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-front-69c572b1c8941.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-left-front-69c572b1c3015.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-back-69c572b1ca6e8.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'Every point is an opportunity. Every rally is a witness. The court is a stage, and our play is a statement of faith. This is the tee for the believer who competes with conviction. Clean geometry. Bold typography. Part of the Founder\'s Drop. Built with intention.',
+    details: {
+      material: '52% combed and ring-spun cotton, 48% polyester',
+      weight: '4.2 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'True to size. Fits unisex/standard.'
+    }
+  },
+  {
+    id: 'drop',
+    name: 'Trust the Drop Tee',
+    price: 35,
+    category: 'tee',
+    scripture: 'Proverbs 3:5',
+    scriptureText: 'Trust in the Lord with all your heart and lean not on your own understanding.',
+    image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c579a350ff7.png',
+    frontImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c579a350ff7.png',
+    backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c579a353206.png',
+    colorways: [
+      { name: 'Dark Grey Heather', code: 'heather-grey', image: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-front-69c579a34ef95.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-left-front-69c579a34cf21.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-dark-grey-heather-back-69c579a352fda.png' },
+      { name: 'Heather Olive', code: 'heather-olive', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-front-69c579a350ff7.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-left-front-69c579a34d2d4.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-olive-back-69c579a353206.png' },
+      { name: 'Heather Slate', code: 'heather-slate', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-front-69c579a3505cd.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-left-front-69c579a34d1aa.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-slate-back-69c579a353156.png' },
+      { name: 'Heather Mauve', code: 'heather-mauve', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-front-69c579a34fb20.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-left-front-69c579a34d079.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-mauve-back-69c579a3530ab.png' },
+      { name: 'Heather Aqua', code: 'heather-aqua', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-front-69c579a3524ca.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-left-front-69c579a34d567.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-aqua-back-69c579a35335d.png' },
+      { name: 'Heather Columbia Blue', code: 'heather-blue', image: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-front-69c579a351ac7.png', modelImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-left-front-69c579a34d417.png', backImage: MOCKUP_BASE + 'unisex-staple-t-shirt-heather-columbia-blue-back-69c579a3532ad.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'The drop shot is the ultimate expression of control and faith. You commit to the play before you see the result. This is the tee for the player who moves with conviction even when the outcome isn\'t guaranteed. Minimal front mark. Significant statement on the back. Part of the Founder\'s Drop. Built with intention.',
+    details: {
+      material: '52% combed and ring-spun cotton, 48% polyester',
+      weight: '4.2 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'True to size. Fits unisex/standard.'
+    }
+  },
+  {
+    id: 'hoodie',
+    name: 'FITK Flagship Hoodie',
+    price: 60,
+    category: 'hoodie',
+    scripture: 'Colossians 3:23',
+    scriptureText: 'Whatever you do, work at it with all your heart, as working for the Lord.',
+    image: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-front-69dd32616f38b.png',
+    frontImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-front-69dd32616f38b.png',
+    backImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-back-69dd32616f7d9.png',
+    colorways: [
+      { name: 'Maroon', code: 'maroon', image: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-maroon-front-69dd32616f526.png', modelImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-maroon-left-69dd3261700ab.png', backImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-maroon-back-69dd32616fa7e.png' },
+      { name: 'Vintage Black', code: 'black', image: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-vintage-black-front-69dd300381007.png', modelImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-vintage-black-left-69dd300381dc6.png', backImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-vintage-black-back-69dd300381819.png' },
+      { name: 'Dusty Rose', code: 'rose', image: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-dusty-rose-front-69dd32616f469.png', modelImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-dusty-rose-left-69dd32616ff65.png', backImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-dusty-rose-back-69dd32616f94f.png' },
+      { name: 'Carbon Grey', code: 'grey', image: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-front-69dd32616f38b.png', modelImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-left-69dd32616fde3.png', backImage: MOCKUP_BASE + 'hoodie_mocks/unisex-premium-pullover-hoodie-carbon-grey-back-69dd32616f7d9.png' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    description: 'The flagship piece. Built for the serious competitor who carries faith on and off the court. Subtle FITK mark on the chest, full brand name down the left sleeve. Part of the Founder\'s Drop.',
+    details: {
+      material: '80% combed and ring-spun cotton, 20% polyester fleece',
+      weight: '6.8 oz',
+      care: 'Pre-shrunk, machine wash cold, gentle cycle, inside out. Do not bleach. Tumble dry low.',
+      sizing: 'Oversized fit. We recommend sizing down for a true fit.'
+    }
+  }
+];
+
+// Export for use in HTML pages
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = products;
+}

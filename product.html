@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product - Faith in the Kitchen</title>
+  <meta name="description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials.">
+  <meta property="og:title" content="Faith in the Kitchen">
+  <meta property="og:description" content="Faith-driven pickleball apparel for competitors who play with purpose.">
+  <meta property="og:type" content="product">
+  <link rel="icon" type="image/png" href="images/logos/FIK_Logo_Primary_CR.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-marquee">
+      <span>FREE SHIPPING ON ORDERS $75+</span><span>FREE SHIPPING ON ORDERS $75+</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo-link">
+        <img src="images/logos/2026-02-11_FIK-Logo-Icon.png" alt="Faith in the Kitchen" class="logo">
+      </a>
+      <button class="mobile-menu-toggle" aria-label="Menu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav">
+        <a href="shop.html">Shop</a>
+        <a href="mission.html">Mission</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div class="search-icon" onclick="toggleSearch()" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </div>
+        <div class="cart-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <input type="text" placeholder="Search products..." id="search-input" onkeydown="if(event.key==='Enter'){window.location='shop.html';}" onfocusout="setTimeout(()=>document.getElementById('search-overlay').classList.remove('open'),200)">
+  </div>
+
+  <!-- Collection Banner -->
+  <section class="collection-banner">
+    <div class="collection-banner-content">
+      <span class="collection-banner-word">THE FOUNDER'S <span class="banner-accent">DROP</span></span>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="section-container">
+      <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="breadcrumb-product-name"></span>
+    </div>
+  </div>
+
+  <!-- Product Section -->
+  <section style="padding: var(--spacing-lg) 0;">
+    <div class="section-container">
+      <div class="product-detail-container" id="product-detail">
+        <!-- Product content loaded by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products -->
+  <section class="product-grid-section">
+    <div class="section-container">
+      <h2 class="related-heading">You Might Also Like</h2>
+      <div class="product-grid" id="related-products">
+        <!-- Related products loaded by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- Column 1: Founder's List Email Signup -->
+        <div class="footer-column footer-signup-col">
+          <h3>Join The Founder's List</h3>
+          <p>Sign up for early access to drops, exclusive content, and court community.</p>
+          <form class="footer-signup-form" onsubmit="event.preventDefault();alert('Thank you for joining the Founder\'s List!');">
+            <input type="email" placeholder="Email Address..." required>
+            <button type="submit" class="btn btn-primary">Sign Me Up</button>
+          </form>
+        </div>
+
+        <!-- Column 2: Shop Links -->
+        <div class="footer-column">
+          <h3>Shop</h3>
+          <ul>
+            <li><a href="shop.html">All Products</a></li>
+            <li><a href="shop.html">Tees</a></li>
+            <li><a href="shop.html">Hoodies</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Company Links -->
+        <div class="footer-column">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="mission.html">Mission</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Connect Links -->
+        <div class="footer-column">
+          <h3>Connect</h3>
+          <div class="footer-social">
+            <a href="https://instagram.com/faithinthekitchenpb" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/>
+              </svg>
+            </a>
+            <a href="mailto:hello@faithinthekitchen.com" class="social-icon" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <img src="images/logos/FIK_Logo_Primary_CR.png" alt="Faith in the Kitchen" class="footer-logo">
+        <p class="footer-copyright">&copy; 2026 FAITH IN THE KITCHEN. ALL RIGHTS RESERVED.</p>
+        <div class="payment-icons">
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Arial">VISA</text></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7a7 7 0 0 1 0 10 7 7 0 0 1 0-10z" fill="#FF5F00"/></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#016FD0"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-weight="bold" font-family="Arial">AMEX</text></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#000"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-family="Arial">Apple Pay</text></svg>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Size Guide Modal -->
+  <div class="modal-overlay" id="size-guide-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="document.getElementById('size-guide-modal').classList.remove('open')">&times;</button>
+      <h2 style="margin-bottom:1rem;">Size Guide</h2>
+      <p style="margin-bottom:1rem;color:var(--text-secondary);font-size:0.9rem;">All measurements in inches. Laid flat.</p>
+      <table class="size-table">
+        <thead>
+          <tr><th>Size</th><th>Chest</th><th>Length</th><th>Sleeve</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>XS</td><td>16.5</td><td>27</td><td>7.75</td></tr>
+          <tr><td>S</td><td>18</td><td>28</td><td>8.25</td></tr>
+          <tr><td>M</td><td>20</td><td>29</td><td>8.5</td></tr>
+          <tr><td>L</td><td>22</td><td>30</td><td>8.75</td></tr>
+          <tr><td>XL</td><td>24</td><td>31</td><td>9</td></tr>
+          <tr><td>2XL</td><td>26</td><td>32</td><td>9.5</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--text-secondary);">Tees: True to size, unisex fit. Hoodies: Oversized fit, consider sizing down.</p>
+    </div>
+  </div>
+
+  <script src="products.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    let currentProduct = null;
+
+    function toggleMobileMenu() {
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      const nav = document.querySelector('.nav');
+      toggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    }
+
+    function toggleSearch() {
+      const overlay = document.getElementById('search-overlay');
+      overlay.classList.toggle('open');
+      if (overlay.classList.contains('open')) {
+        document.getElementById('search-input').focus();
+      }
+    }
+
+    function openSizeGuide(e) {
+      e.preventDefault();
+      document.getElementById('size-guide-modal').classList.add('open');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('size-guide-modal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      console.log('Email signup:', email);
+      alert('Thank you for joining the Founder\'s List. We\'ll be in touch soon.');
+      document.getElementById('signup-form').reset();
+    }
+
+    function getProductIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function renderProductDetail(product) {
+      currentProduct = product;
+      const colorParam = new URLSearchParams(window.location.search).get('color');
+      const matchedColorway = colorParam ? product.colorways.find(c => c.code === colorParam) : null;
+      const defaultColorway = matchedColorway || product.colorways[0];
+
+      function buildGallery(colorway) {
+        if (product.category === 'tee') {
+          // Tees: model shot → front flat → back
+          const images = [];
+          if (colorway.modelImage) images.push(colorway.modelImage);
+          images.push(colorway.image);
+          if (colorway.backImage) images.push(colorway.backImage);
+          return images;
+        } else {
+          // Hoodies: front → back → sleeve (left)
+          const images = [colorway.image];
+          if (colorway.backImage) images.push(colorway.backImage);
+          if (colorway.modelImage) images.push(colorway.modelImage);
+          return images;
+        }
+      }
+
+      const galleryImages = buildGallery(defaultColorway);
+
+      const defaultIdx = matchedColorway ? product.colorways.indexOf(matchedColorway) : 0;
+      const colorSwatches = product.colorways.map((color, idx) => `
+        <div class="swatch ${idx === defaultIdx ? 'active' : ''}"
+             data-color="${color.code}"
+             data-index="${idx}"
+             title="${color.name}">
+          <img src="${color.image}" alt="${color.name}">
+        </div>
+      `).join('');
+
+      const sizeOptions = product.sizes.map(size => `
+        <button class="size-btn ${size === 'M' ? 'active' : ''}" data-size="${size}">${size}</button>
+      `).join('');
+
+      const detailsHTML = `
+        <div class="product-gallery">
+          <div class="product-gallery-thumbs" id="gallery-thumbs">
+            ${galleryImages.map((img, i) => `
+              <div class="product-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${img}">
+                <img src="${img}" alt="${product.name} view ${i + 1}" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
+              </div>
+            `).join('')}
+          </div>
+          <div class="product-gallery-main">
+            <img id="main-image" src="${galleryImages[0]}" alt="${product.name}" class="${product.category === 'tee' ? 'model-zoom' : ''}">
+          </div>
+        </div>
+
+        <div class="product-detail-info">
+          <h1>${product.name}</h1>
+          <p class="product-detail-price">$${product.price}</p>
+
+          <div class="scripture-block">
+            <p class="scripture-text">"${product.scriptureText}"</p>
+            <p class="scripture-ref">${product.scripture}</p>
+          </div>
+
+          <div class="color-swatches">
+            <div class="swatch-label">Select Color: <span id="color-name">${defaultColorway.name}</span></div>
+            <div class="swatches" id="color-swatches">
+              ${colorSwatches}
+            </div>
+          </div>
+
+          <div class="size-selector">
+            <div class="size-label">Select Size <a href="#" onclick="openSizeGuide(event)" style="font-size:0.75rem;color:var(--accent);margin-left:0.5rem;text-decoration:underline;">Size Guide</a></div>
+            <div class="sizes">
+              ${sizeOptions}
+            </div>
+          </div>
+
+          <button class="add-to-cart" id="add-to-cart">Add To Cart</button>
+
+          <p class="product-description">${product.description}</p>
+
+          <div class="quality-details">
+            <div class="detail-item">
+              <label>Material</label>
+              <p>${product.details.material}</p>
+            </div>
+            <div class="detail-item">
+              <label>Weight</label>
+              <p>${product.details.weight}</p>
+            </div>
+            <div class="detail-item">
+              <label>Care Instructions</label>
+              <p>${product.details.care}</p>
+            </div>
+            <div class="detail-item">
+              <label>Fit</label>
+              <p>${product.details.sizing}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('product-detail').innerHTML = detailsHTML;
+
+      // Gallery thumbnail clicks
+      document.querySelectorAll('.product-gallery-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          document.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const mainImg = document.getElementById('main-image');
+          mainImg.src = this.getAttribute('data-src');
+          const thumbIdx = Array.from(this.parentElement.children).indexOf(this);
+          mainImg.classList.toggle('model-zoom', product.category === 'tee' && thumbIdx === 0);
+        });
+      });
+
+      // Color swatch interaction - rebuild gallery on color change
+      document.querySelectorAll('.swatch').forEach(swatch => {
+        swatch.addEventListener('click', function() {
+          document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+          this.classList.add('active');
+          const idx = parseInt(this.getAttribute('data-index'));
+          const colorway = product.colorways[idx];
+          document.getElementById('color-name').textContent = colorway.name;
+
+          // Update gallery using category-aware order
+          const newImages = buildGallery(colorway);
+
+          const thumbsContainer = document.getElementById('gallery-thumbs');
+          thumbsContainer.innerHTML = newImages.map((img, i) => `
+            <div class="product-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${img}">
+              <img src="${img}" alt="${product.name} view ${i + 1}" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
+            </div>
+          `).join('');
+
+          const mainImg = document.getElementById('main-image');
+          mainImg.src = newImages[0];
+          mainImg.classList.toggle('model-zoom', product.category === 'tee');
+
+          // Re-bind thumb clicks
+          thumbsContainer.querySelectorAll('.product-gallery-thumb').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+              thumbsContainer.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
+              this.classList.add('active');
+              const mi = document.getElementById('main-image');
+              mi.src = this.getAttribute('data-src');
+              const ti = Array.from(this.parentElement.children).indexOf(this);
+              mi.classList.toggle('model-zoom', product.category === 'tee' && ti === 0);
+            });
+          });
+        });
+      });
+
+      // Size selection
+      document.querySelectorAll('.size-btn').forEach(option => {
+        option.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.size-btn').forEach(o => o.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // Add to cart
+      document.getElementById('add-to-cart').addEventListener('click', function() {
+        const selectedColor = document.querySelector('.swatch.active').getAttribute('data-color');
+        const selectedSize = document.querySelector('.size-btn.active').textContent;
+        addToCart(product.id, selectedColor, selectedSize);
+      });
+    }
+
+    function renderRelatedProducts() {
+      if (!currentProduct) return;
+
+      const related = products.filter(p =>
+        p.id !== currentProduct.id && p.category === currentProduct.category
+      ).slice(0, 3);
+
+      const shopModelCards = {
+        'dinkp':  { card: 'images/card_models/dink_olive.png',   colorCode: 'heather-olive' },
+        'servp':  { card: 'images/card_models/serve_slate.png',  colorCode: 'heather-slate' },
+        'sgsg':   { card: 'images/card_models/sgsf_grey.png',    colorCode: 'heather-grey' },
+        '4glory': { card: 'images/card_models/4glory_mauve.png', colorCode: 'heather-mauve' },
+        'drop':   { card: 'images/card_models/drop_aqua.png',    colorCode: 'heather-aqua' },
+        'hoodie': { card: 'images/card_models/hoodie_black.png', colorCode: 'black' }
+      };
+
+      const relatedHTML = related.map(product => {
+        const entry = shopModelCards[product.id];
+        const primaryImg = entry ? entry.card : product.image;
+        const matchCw = entry ? product.colorways.find(c => c.code === entry.colorCode) : null;
+        const hoverImg = matchCw ? matchCw.image : product.image;
+        return `
+        <a href="product.html?id=${product.id}" style="text-decoration: none; color: inherit;">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="${primaryImg}" alt="${product.name}">
+              <img src="${hoverImg}" alt="${product.name} flat" class="hover-image">
+            </div>
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-price">$${product.price}</p>
+            <p class="product-scripture">${product.scripture}</p>
+          </div>
+        </a>
+      `}).join('');
+
+      document.getElementById('related-products').innerHTML = relatedHTML;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const productId = getProductIdFromURL();
+      if (productId) {
+        const product = products.find(p => p.id === productId);
+        if (product) {
+          renderProductDetail(product);
+          renderRelatedProducts();
+          document.title = `${product.name} - Faith in the Kitchen`;
+          document.getElementById('breadcrumb-product-name').textContent = product.name;
+        } else {
+          document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>';
+        }
+      } else {
+        document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>';
+      }
+    });
+  </script>
+
+  <script>
+    // Typewriter effect for scripture verse + citation
+    (function() {
+      function initTypewriter() {
+        const textEl = document.querySelector('.scripture-block .scripture-text');
+        const refEl = document.querySelector('.scripture-block .scripture-ref');
+        if (!textEl || !refEl) return;
+
+        const verseText = textEl.textContent.trim();
+        const refText = refEl.textContent.trim();
+        textEl.innerHTML = '<span class="typewriter-cursor">|</span>';
+        refEl.textContent = '';
+
+        const typeSpeed = 40;
+        const pauseAfterVerse = 600;
+        const pauseAfterComplete = 3000;
+        const pauseAfterClear = 800;
+
+        function typeVerse(i) {
+          if (i < verseText.length) {
+            textEl.innerHTML = verseText.substring(0, i + 1) + '<span class="typewriter-cursor">|</span>';
+            setTimeout(() => typeVerse(i + 1), typeSpeed);
+          } else {
+            textEl.innerHTML = verseText;
+            setTimeout(() => typeRef(0), pauseAfterVerse);
+          }
+        }
+
+        function typeRef(i) {
+          if (i < refText.length) {
+            refEl.innerHTML = refText.substring(0, i + 1) + '<span class="typewriter-cursor">|</span>';
+            setTimeout(() => typeRef(i + 1), typeSpeed);
+          } else {
+            refEl.innerHTML = refText;
+            setTimeout(() => {
+              textEl.innerHTML = '<span class="typewriter-cursor">|</span>';
+              refEl.textContent = '';
+              setTimeout(() => typeVerse(0), pauseAfterClear);
+            }, pauseAfterComplete);
+          }
+        }
+
+        setTimeout(() => typeVerse(0), 500);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(initTypewriter, 300));
+      } else {
+        setTimeout(initTypewriter, 300);
+      }
+    })();
+  </script>
+</body>
+</html>
