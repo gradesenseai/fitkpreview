@@ -458,9 +458,14 @@ function handleFoundersListSignup(form) {
 
   var query = 'mutation customerCreate($input: CustomerCreateInput!) { customerCreate(input: $input) { customer { id email } customerUserErrors { code field message } } }';
 
+  // Shopify requires a password to create a customer account.
+  // Generate a random one - these users won't need to log in.
+  var randomPass = 'FITK_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
   var variables = {
     input: {
       email: email,
+      password: randomPass,
       acceptsMarketing: true,
       tags: ["founders-list"]
     }
