@@ -393,9 +393,13 @@
     function renderRelatedProducts() {
       if (!currentProduct) return;
 
-      const related = products.filter(p =>
+      let related = products.filter(p =>
         p.id !== currentProduct.id && p.category === currentProduct.category
-      ).slice(0, 3);
+      );
+      if (related.length === 0) {
+        related = products.filter(p => p.id !== currentProduct.id);
+      }
+      related = related.slice(0, 3);
 
       const shopModelCards = {
         'dinkp':  { card: 'images/card_models/dink_olive.png',   colorCode: 'heather-olive' },
