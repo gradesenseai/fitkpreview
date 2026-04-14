@@ -151,12 +151,6 @@
       <div class="footer-bottom">
         <img src="images/logos/FIK_Logo_Primary_CR.png" alt="Faith in the Kitchen" class="footer-logo">
         <p class="footer-copyright">&copy; 2026 FAITH IN THE KITCHEN. ALL RIGHTS RESERVED.</p>
-        <div class="payment-icons">
-          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Arial">VISA</text></svg>
-          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7a7 7 0 0 1 0 10 7 7 0 0 1 0-10z" fill="#FF5F00"/></svg>
-          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#016FD0"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-weight="bold" font-family="Arial">AMEX</text></svg>
-          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#000"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-family="Arial">Apple Pay</text></svg>
-        </div>
       </div>
     </div>
   </footer>
@@ -177,7 +171,7 @@
       if (overlay.classList.contains('open')) document.getElementById('search-input').focus();
     }
 
-    // Mission banner word rotator — fade
+    // Mission banner word rotator - fade
     (function() {
       const words = document.querySelectorAll('.mission-banner-word');
       if (!words.length) return;
@@ -188,6 +182,51 @@
         words[next].classList.add('active');
         current = next;
       }, 3000);
+    })();
+
+    // Scripture typewriter effect
+    (function() {
+      function initTypewriter() {
+        const textEl = document.querySelector('.mission-scripture-callout .scripture-text');
+        const refEl = document.querySelector('.mission-scripture-callout .scripture-ref');
+        if (!textEl || !refEl) return;
+        const verseText = textEl.textContent.trim();
+        const refText = refEl.textContent.trim();
+        textEl.innerHTML = '<span class="typewriter-cursor">|</span>';
+        refEl.textContent = '';
+        const typeSpeed = 40;
+        const pauseAfterVerse = 600;
+        const pauseAfterComplete = 3000;
+        const pauseAfterClear = 800;
+        function typeVerse(i) {
+          if (i < verseText.length) {
+            textEl.innerHTML = verseText.substring(0, i + 1) + '<span class="typewriter-cursor">|</span>';
+            setTimeout(() => typeVerse(i + 1), typeSpeed);
+          } else {
+            textEl.innerHTML = verseText;
+            setTimeout(() => typeRef(0), pauseAfterVerse);
+          }
+        }
+        function typeRef(i) {
+          if (i < refText.length) {
+            refEl.innerHTML = refText.substring(0, i + 1) + '<span class="typewriter-cursor">|</span>';
+            setTimeout(() => typeRef(i + 1), typeSpeed);
+          } else {
+            refEl.innerHTML = refText;
+            setTimeout(() => {
+              textEl.innerHTML = '<span class="typewriter-cursor">|</span>';
+              refEl.textContent = '';
+              setTimeout(() => typeVerse(0), pauseAfterClear);
+            }, pauseAfterComplete);
+          }
+        }
+        setTimeout(() => typeVerse(0), 500);
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(initTypewriter, 300));
+      } else {
+        setTimeout(initTypewriter, 300);
+      }
     })();
   </script>
 </body>
