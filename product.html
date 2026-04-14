@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product - Faith in the Kitchen</title>
-  <meta name="description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials.">
-  <meta property="og:title" content="Faith in the Kitchen">
-  <meta property="og:description" content="Faith-driven pickleball apparel for competitors who play with purpose.">
+  <title>Product - Faith in the Kitchen Pickleball Apparel</title>
+  <meta name="description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials. Free shipping on orders $75+.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://faithinthekitchen.com/product.html">
+  <meta property="og:title" content="Faith in the Kitchen Pickleball Apparel">
+  <meta property="og:description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials.">
   <meta property="og:type" content="product">
+  <meta property="og:url" content="https://faithinthekitchen.com/product.html">
+  <meta property="og:image" content="https://faithinthekitchen.com/images/logos/FIK_Logo_Primary_CR.png">
+  <meta property="og:site_name" content="Faith in the Kitchen">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Faith in the Kitchen Pickleball Apparel">
+  <meta name="twitter:description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials.">
+  <meta name="twitter:image" content="https://faithinthekitchen.com/images/logos/FIK_Logo_Primary_CR.png">
   <link rel="icon" type="image/png" href="images/logos/FIK_Logo_Primary_CR.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -426,8 +435,38 @@
         if (product) {
           renderProductDetail(product);
           renderRelatedProducts();
-          document.title = `${product.name} - Faith in the Kitchen`;
+          document.title = `${product.name} | Faith in the Kitchen Pickleball Apparel`;
           document.getElementById('breadcrumb-product-name').textContent = product.name;
+
+          // Update meta description dynamically
+          var metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) metaDesc.setAttribute('content', product.name + ' - ' + product.description.substring(0, 120) + '...');
+
+          // Update canonical with product ID
+          var canonical = document.querySelector('link[rel="canonical"]');
+          if (canonical) canonical.setAttribute('href', 'https://faithinthekitchen.com/product.html?id=' + product.id);
+
+          // Inject Product structured data (JSON-LD)
+          var schema = {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": product.name,
+            "description": product.description,
+            "image": "https://faithinthekitchen.com/" + product.image,
+            "brand": { "@type": "Brand", "name": "Faith in the Kitchen" },
+            "offers": {
+              "@type": "Offer",
+              "price": product.price.toFixed(2),
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "https://faithinthekitchen.com/product.html?id=" + product.id,
+              "seller": { "@type": "Organization", "name": "Faith in the Kitchen" }
+            }
+          };
+          var schemaScript = document.createElement('script');
+          schemaScript.type = 'application/ld+json';
+          schemaScript.textContent = JSON.stringify(schema);
+          document.head.appendChild(schemaScript);
         } else {
           document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>';
         }
