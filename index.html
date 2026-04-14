@@ -128,7 +128,7 @@
         <div class="footer-column footer-signup-col">
           <h3>Join The Founder's List</h3>
           <p>Sign up for early access to drops, exclusive content, and court community.</p>
-          <form class="footer-signup-form" onsubmit="event.preventDefault();alert('Thank you for joining the Founder\'s List!');">
+          <form class="footer-signup-form" onsubmit="event.preventDefault();handleFoundersListSignup(this);">
             <input type="email" placeholder="Email Address..." required>
             <button type="submit" class="btn btn-primary">Sign Me Up</button>
           </form>
@@ -281,10 +281,8 @@
     // REQUIRED: id="signup-form" with onsubmit="handleSignup(event)", id="email" input
     function handleSignup(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      console.log('Email signup:', email);
-      alert('Thank you for joining the Founder\'s List. We\'ll be in touch soon.');
-      document.getElementById('signup-form').reset();
+      var form = e.target;
+      handleFoundersListSignup(form);
     }
 
     // Load products on page load

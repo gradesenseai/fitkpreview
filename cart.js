@@ -444,6 +444,61 @@ function removePlaceholderItem(index) {
 }
 
 // ============================================================
+// Founder's List Signup (Shopify Customer API)
+// ============================================================
+function handleFoundersListSignup(form) {
+  var emailInput = form.querySelector('input[type="email"]');
+  var submitBtn = form.querySelector('button[type="submit"]');
+  var email = emailInput.value.trim();
+
+  if (!email) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing Up...';
+
+  var query = 'mutation customerCreate($input: CustomerCreateInput!) { customerCreate(input: $input) { customer { id email } customerUserErrors { code field message } } }';
+
+  var variables = {
+    input: {
+      email: email,
+      acceptsMarketing: true,
+      tags: ["founders-list"]
+    }
+  };
+
+  fetch('https://' + SHOPIFY_CONFIG.domain + '/api/' + (SHOPIFY_CONFIG.apiVersion || '2025-01') + '/graphql.json', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_CONFIG.storefrontAccessToken,
+    },
+    body: JSON.stringify({ query: query, variables: variables }),
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    var errors = data.data && data.data.customerCreate && data.data.customerCreate.customerUserErrors;
+    if (errors && errors.length > 0 && errors[0].code !== 'TAKEN') {
+      submitBtn.textContent = 'Try Again';
+      submitBtn.disabled = false;
+      showCartNotification('Something went wrong. Please try again.');
+    } else {
+      emailInput.value = '';
+      submitBtn.textContent = "You're In!";
+      showCartNotification("Welcome to the Founder's List!");
+      setTimeout(function() {
+        submitBtn.textContent = 'Sign Me Up';
+        submitBtn.disabled = false;
+      }, 3000);
+    }
+  })
+  .catch(function() {
+    submitBtn.textContent = 'Try Again';
+    submitBtn.disabled = false;
+    showCartNotification('Connection error. Please try again.');
+  });
+}
+
+// ============================================================
 // Initialize on page load
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
