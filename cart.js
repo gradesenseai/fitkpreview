@@ -456,9 +456,19 @@ function handleFoundersListSignup(form) {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Signing Up...';
 
-  var query = 'mutation customerEmailMarketingSubscribe($email: String!) { customerEmailMarketingSubscribe(email: $email) { customer { email acceptsMarketing } customerUserErrors { code field message } } }';
+  var query = 'mutation customerCreate($input: CustomerCreateInput!) { customerCreate(input: $input) { customer { id email acceptsMarketing } customerUserErrors { code field message } } }';
 
-  var variables = { email: email };
+  // Generate a random password - required by Shopify to create the customer
+  // record. These are email subscribers, not account logins.
+  var pass = 'FITK!' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+  var variables = {
+    input: {
+      email: email,
+      password: pass,
+      acceptsMarketing: true
+    }
+  };
 
   fetch('https://' + SHOPIFY_CONFIG.domain + '/api/' + (SHOPIFY_CONFIG.apiVersion || '2025-01') + '/graphql.json', {
     method: 'POST',
@@ -470,9 +480,9 @@ function handleFoundersListSignup(form) {
   })
   .then(function(res) { return res.json(); })
   .then(function(data) {
-    var result = data.data && data.data.customerEmailMarketingSubscribe;
+    var result = data.data && data.data.customerCreate;
     var errors = result && result.customerUserErrors;
-    if (errors && errors.length > 0) {
+    if (errors && errors.length > 0 && errors[0].code !== 'TAKEN') {
       submitBtn.textContent = 'Try Again';
       submitBtn.disabled = false;
       showCartNotification('Something went wrong. Please try again.');
