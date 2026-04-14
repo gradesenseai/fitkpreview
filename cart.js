@@ -226,10 +226,15 @@ function goToCheckout() {
 function createCartDrawer() {
   if (document.getElementById('cart-drawer')) return;
 
+  // Create overlay as a sibling (not child) of the drawer
+  const overlay = document.createElement('div');
+  overlay.className = 'cart-overlay';
+  overlay.onclick = closeCartDrawer;
+  document.body.appendChild(overlay);
+
   const drawer = document.createElement('div');
   drawer.id = 'cart-drawer';
   drawer.innerHTML = '\
-    <div class="cart-overlay" onclick="closeCartDrawer()"></div>\
     <div class="cart-panel">\
       <div class="cart-header">\
         <h3>Your Cart</h3>\
@@ -261,17 +266,21 @@ function createCartDrawer() {
 function openCartDrawer() {
   createCartDrawer();
   const drawer = document.getElementById('cart-drawer');
+  const overlay = document.querySelector('.cart-overlay');
   drawer.classList.add('open');
+  if (overlay) overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
   renderCartItems();
 }
 
 function closeCartDrawer() {
   const drawer = document.getElementById('cart-drawer');
+  const overlay = document.querySelector('.cart-overlay');
   if (drawer) {
     drawer.classList.remove('open');
     document.body.style.overflow = '';
   }
+  if (overlay) overlay.classList.remove('open');
 }
 
 function renderCartItems() {

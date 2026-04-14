@@ -960,18 +960,21 @@ header {
    Cart Drawer & Overlay
    ============================================================ */
 .cart-overlay {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-smooth), visibility var(--transition-smooth);
 }
 
 .cart-overlay.open {
-  display: block;
+  opacity: 1;
+  visibility: visible;
 }
 
 #cart-drawer {
@@ -980,6 +983,7 @@ header {
   top: 0;
   width: 400px;
   height: 100vh;
+  height: 100dvh;
   background-color: var(--bg-primary);
   z-index: 1001;
   transition: right var(--transition-smooth);
@@ -3208,10 +3212,12 @@ footer {
     margin-top: var(--spacing-sm);
   }
 
-  /* Cart: full width */
+  /* Cart: full width on mobile */
   #cart-drawer {
     width: 100%;
     right: -100%;
+    height: 100vh;
+    height: 100dvh;
   }
 
   /* Header */
