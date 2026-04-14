@@ -68,7 +68,7 @@
   <!-- Collection Banner -->
   <section class="collection-banner">
     <div class="collection-banner-content">
-      <span class="collection-banner-word active">THE FOUNDER'S <span class="banner-accent">DROP</span></span>
+      <span class="collection-banner-word">THE FOUNDER'S <span class="banner-accent">DROP</span></span>
     </div>
   </section>
 
@@ -141,7 +141,7 @@
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/>
               </svg>
             </a>
-            <a href="mailto:team@faithinthekitchen.com" class="social-icon" aria-label="Email">
+            <a href="mailto:hello@faithinthekitchen.com" class="social-icon" aria-label="Email">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </a>
           </div>
@@ -152,6 +152,12 @@
       <div class="footer-bottom">
         <img src="images/logos/FIK_Logo_Primary_CR.png" alt="Faith in the Kitchen" class="footer-logo">
         <p class="footer-copyright">&copy; 2026 FAITH IN THE KITCHEN. ALL RIGHTS RESERVED.</p>
+        <div class="payment-icons">
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#1A1F71"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Arial">VISA</text></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 7a7 7 0 0 1 0 10 7 7 0 0 1 0-10z" fill="#FF5F00"/></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#016FD0"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-weight="bold" font-family="Arial">AMEX</text></svg>
+          <svg viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="3" fill="#000"/><text x="19" y="16" text-anchor="middle" fill="white" font-size="7" font-family="Arial">Apple Pay</text></svg>
+        </div>
       </div>
     </div>
   </footer>
@@ -181,7 +187,6 @@
 
   <script src="products.js"></script>
   <script src="cart.js"></script>
-  <script src="protect.js"></script>
   <script>
     let currentProduct = null;
 
@@ -212,7 +217,7 @@
 
     function handleSignup(e) {
       e.preventDefault();
-      var form = e.target;
+      const form = e.target;
       handleFoundersListSignup(form);
     }
 
@@ -245,6 +250,7 @@
       }
 
       const galleryImages = buildGallery(defaultColorway);
+      const richAlt = product.altText || product.name;
 
       const defaultIdx = matchedColorway ? product.colorways.indexOf(matchedColorway) : 0;
       const colorSwatches = product.colorways.map((color, idx) => `
@@ -265,12 +271,12 @@
           <div class="product-gallery-thumbs" id="gallery-thumbs">
             ${galleryImages.map((img, i) => `
               <div class="product-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${img}">
-                <img src="${img}" alt="${product.name} view ${i + 1}" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
+                <img src="${img}" alt="${richAlt} - view ${i + 1}" loading="lazy" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
               </div>
             `).join('')}
           </div>
           <div class="product-gallery-main">
-            <img id="main-image" src="${galleryImages[0]}" alt="${product.name}" class="${product.category === 'tee' ? 'model-zoom' : ''}">
+            <img id="main-image" src="${galleryImages[0]}" alt="${richAlt}" class="${product.category === 'tee' ? 'model-zoom' : ''}">
           </div>
         </div>
 
@@ -351,7 +357,7 @@
           const thumbsContainer = document.getElementById('gallery-thumbs');
           thumbsContainer.innerHTML = newImages.map((img, i) => `
             <div class="product-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${img}">
-              <img src="${img}" alt="${product.name} view ${i + 1}" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
+              <img src="${img}" alt="${richAlt} - ${colorway.name} view ${i + 1}" loading="lazy" class="${product.category === 'tee' && i === 0 ? 'thumb-model-zoom' : ''}">
             </div>
           `).join('');
 
@@ -393,6 +399,8 @@
     function renderRelatedProducts() {
       if (!currentProduct) return;
 
+      // Show same-category products first; if none (e.g. hoodie is the only hoodie),
+      // fall back to showing products from other categories
       let related = products.filter(p =>
         p.id !== currentProduct.id && p.category === currentProduct.category
       );
@@ -415,12 +423,13 @@
         const primaryImg = entry ? entry.card : product.image;
         const matchCw = entry ? product.colorways.find(c => c.code === entry.colorCode) : null;
         const hoverImg = matchCw ? matchCw.image : product.image;
+        const cardAlt = product.altText || product.name;
         return `
         <a href="product.html?id=${product.id}" style="text-decoration: none; color: inherit;">
           <div class="product-card">
             <div class="product-image">
-              <img src="${primaryImg}" alt="${product.name}">
-              <img src="${hoverImg}" alt="${product.name} flat" class="hover-image">
+              <img src="${primaryImg}" alt="${cardAlt}" loading="lazy">
+              <img src="${hoverImg}" alt="${cardAlt} - flat lay" loading="lazy" class="hover-image">
             </div>
             <h3 class="product-name">${product.name}</h3>
             <p class="product-price">$${product.price}</p>
@@ -442,13 +451,33 @@
           document.title = `${product.name} | Faith in the Kitchen Pickleball Apparel`;
           document.getElementById('breadcrumb-product-name').textContent = product.name;
 
-          // Update meta description dynamically
+          // Update meta description dynamically - prefer hand-written metaDescription,
+          // fall back to truncated description for any product that doesn't have one set.
           var metaDesc = document.querySelector('meta[name="description"]');
-          if (metaDesc) metaDesc.setAttribute('content', product.name + ' - ' + product.description.substring(0, 120) + '...');
+          var descContent = product.metaDescription || (product.name + ' - ' + product.description.substring(0, 120));
+          if (metaDesc) metaDesc.setAttribute('content', descContent);
 
           // Update canonical with product ID
           var canonical = document.querySelector('link[rel="canonical"]');
           if (canonical) canonical.setAttribute('href', 'https://faithinthekitchen.com/product.html?id=' + product.id);
+
+          // Update Open Graph + Twitter card tags so social shares of this specific
+          // product link show the product image + copy, not the generic logo.
+          var absoluteProductImage = 'https://faithinthekitchen.com/' + product.image;
+          var ogTitle = document.querySelector('meta[property="og:title"]');
+          if (ogTitle) ogTitle.setAttribute('content', product.name + ' | Faith in the Kitchen');
+          var ogDesc = document.querySelector('meta[property="og:description"]');
+          if (ogDesc) ogDesc.setAttribute('content', descContent);
+          var ogImage = document.querySelector('meta[property="og:image"]');
+          if (ogImage) ogImage.setAttribute('content', absoluteProductImage);
+          var ogUrl = document.querySelector('meta[property="og:url"]');
+          if (ogUrl) ogUrl.setAttribute('content', 'https://faithinthekitchen.com/product.html?id=' + product.id);
+          var twTitle = document.querySelector('meta[name="twitter:title"]');
+          if (twTitle) twTitle.setAttribute('content', product.name + ' | Faith in the Kitchen');
+          var twDesc = document.querySelector('meta[name="twitter:description"]');
+          if (twDesc) twDesc.setAttribute('content', descContent);
+          var twImage = document.querySelector('meta[name="twitter:image"]');
+          if (twImage) twImage.setAttribute('content', absoluteProductImage);
 
           // Inject Product structured data (JSON-LD)
           var schema = {
