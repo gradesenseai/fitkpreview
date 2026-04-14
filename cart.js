@@ -16,7 +16,7 @@ const SHOPIFY_PRODUCT_HANDLES = {
   'sgsg': 'soft-game-strong-faith-tee',
   '4glory': 'for-his-glory-tee',
   'drop': 'trust-the-drop-tee',
-  'hoodie': 'fitk-flagship-hoodie',
+  'hoodie': 'hoodie',
 };
 
 let shopifyCart = null;
