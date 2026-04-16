@@ -496,7 +496,73 @@
               "priceCurrency": "USD",
               "availability": "https://schema.org/InStock",
               "url": "https://faithinthekitchen.com/product.html?id=" + product.id,
-              "seller": { "@type": "Organization", "name": "Faith in the Kitchen" }
+              "seller": { "@type": "Organization", "name": "Faith in the Kitchen" },
+              "shippingDetails": [
+                {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "6.99",
+                    "currency": "USD"
+                  },
+                  "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "US"
+                  },
+                  "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 2,
+                      "maxValue": 5,
+                      "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 3,
+                      "maxValue": 7,
+                      "unitCode": "DAY"
+                    }
+                  }
+                },
+                {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "0",
+                    "currency": "USD"
+                  },
+                  "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "US"
+                  },
+                  "shippingLabel": "Free shipping on orders $75+",
+                  "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 2,
+                      "maxValue": 5,
+                      "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 3,
+                      "maxValue": 7,
+                      "unitCode": "DAY"
+                    }
+                  }
+                }
+              ],
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "US",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": 30,
+                "returnMethod": "https://schema.org/ReturnByMail",
+                "returnFees": "https://schema.org/ReturnShippingFees",
+                "returnPolicyCountry": "US"
+              }
             }
           };
           var schemaScript = document.createElement('script');
