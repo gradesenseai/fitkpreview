@@ -3,9 +3,12 @@
 // Uses the Storefront API Cart GraphQL endpoints directly.
 // No external SDK required.
 
+// Shopify Storefront API token - set via environment variable or config injection at deploy time.
+// Removed from source per Shopify Ecosystem Governance request (April 2026, ticket 49f35924-2d85-4eff-943d-93c0e3926455).
+// The previous token has been rotated in Shopify admin; this file no longer holds a live credential.
 const SHOPIFY_CONFIG = {
   domain: 'faith-in-the-kitchen.myshopify.com',
-  storefrontAccessToken: '843036e6e5826887cff08bb03a6b36b0',
+  storefrontAccessToken: '', // inject at deploy (e.g. Vercel env var substitution or serverless proxy)
   apiVersion: '2025-01',
 };
 
