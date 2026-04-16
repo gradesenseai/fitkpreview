@@ -3,7 +3,7 @@
 // reads the draft from Supabase, commits the post + updated index to GitHub,
 // and Vercel auto-deploys. Done.
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).send('Method not allowed');
   }

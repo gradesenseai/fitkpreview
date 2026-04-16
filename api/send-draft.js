@@ -2,7 +2,7 @@
 // Called by the scheduled Cowork task after building a Daily Dink draft.
 // Stores the draft in Supabase, then emails it to Mark for approval via Resend.
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
