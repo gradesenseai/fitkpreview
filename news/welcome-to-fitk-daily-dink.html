@@ -167,7 +167,7 @@
 
       <div class="news-post-footer">
         <a href="./index.html" class="news-post-back">&larr; Back to FITK News</a>
-        <span class="news-post-share">Share this post on Instagram &bull; @faithinthekitchenpb</span>
+        <button type="button" class="news-post-share" onclick="copyPostLink(this)" style="cursor:pointer;background:none;border:none;font-family:inherit;color:var(--accent);">Copy link to share &bull; Tag @faithinthekitchenpb</button>
       </div>
 
     </div>
@@ -240,6 +240,15 @@
       const overlay = document.getElementById('search-overlay');
       overlay.classList.toggle('open');
       if (overlay.classList.contains('open')) document.getElementById('search-input').focus();
+    }
+
+    function copyPostLink(btn) {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Link copied!';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      });
     }
   </script>
 </body>
