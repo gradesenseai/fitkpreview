@@ -3703,6 +3703,46 @@ textarea:focus-visible {
   color: var(--accent);
 }
 
+/* Post tags */
+.news-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.news-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-body-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.news-tag--topic {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--text-secondary);
+}
+
+.news-tag--player {
+  background-color: rgba(200, 150, 62, 0.12);
+  color: #8B6914;
+}
+
+.news-tag--brand {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+
+.news-tag:hover {
+  opacity: 0.7;
+}
+
 /* Empty-state for filters */
 .news-empty {
   grid-column: 1 / -1;
