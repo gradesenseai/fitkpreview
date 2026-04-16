@@ -265,6 +265,17 @@
           applyFilter(btn.getAttribute('data-filter'));
         });
       });
+
+      // Apply filter from URL param (e.g. ?filter=daily-dink)
+      const params = new URLSearchParams(window.location.search);
+      const urlFilter = params.get('filter');
+      if (urlFilter) {
+        const match = Array.from(buttons).find(b => b.getAttribute('data-filter') === urlFilter);
+        if (match) {
+          match.click();
+          match.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
     })();
   </script>
 </body>

@@ -3561,8 +3561,12 @@ textarea:focus-visible {
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.6rem;
-  padding: 1.5rem 6% 0.5rem;
+  padding: 1rem 6%;
   background-color: #F5F5F0;
+  position: sticky;
+  top: calc(var(--announcement-bar-height) + var(--header-height) + 1.7rem);
+  z-index: 85;
+  border-bottom: 1px solid var(--border);
 }
 
 .news-filter-btn {
@@ -3923,8 +3927,9 @@ textarea:focus-visible {
   }
 
   .news-filters {
-    padding: 1.25rem 5% 0.25rem;
+    padding: 0.75rem 5%;
     gap: 0.45rem;
+    top: calc(var(--announcement-bar-height) + var(--header-height) + 1.5rem);
   }
 
   .news-filter-btn {
