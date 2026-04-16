@@ -180,20 +180,32 @@
 
     function handleContactSubmit(e) {
       e.preventDefault();
+      const form = document.getElementById('contact-form');
+      const btn = form.querySelector('.form-submit');
+      btn.textContent = 'SENDING...';
+      btn.disabled = true;
 
-      const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-      };
-
-      // Placeholder for form submission
-      console.log('Form submission:', formData);
-      alert('Thank you for reaching out. We will be in touch soon.');
-      document.getElementById('contact-form').reset();
-
-      // TODO: Wire up Formspree, SendGrid, or similar service
+      fetch('https://formspree.io/f/mgorakrq', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(res => {
+        if (res.ok) {
+          form.reset();
+          btn.textContent = 'MESSAGE SENT';
+          setTimeout(() => { btn.textContent = 'SEND MESSAGE'; btn.disabled = false; }, 3000);
+        } else {
+          btn.textContent = 'SEND MESSAGE';
+          btn.disabled = false;
+          alert('Something went wrong. Please try again or email us directly at hello@faithinthekitchen.com.');
+        }
+      })
+      .catch(() => {
+        btn.textContent = 'SEND MESSAGE';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again or email us directly at hello@faithinthekitchen.com.');
+      });
     }
   </script>
 </body>
