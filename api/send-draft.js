@@ -14,7 +14,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { edition_date, slug, post_title, post_html, card_html, headlines } = req.body;
+    const { edition_date, slug, post_title, dek, post_html, card_html, headlines } = req.body;
 
     if (!edition_date || !slug || !post_title || !post_html || !card_html) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -54,15 +54,19 @@ module.exports = async function handler(req, res) {
     const siteUrl = process.env.SITE_URL || 'https://faithinthekitchen.com';
     const approveLink = `${siteUrl}/api/approve?token=${approveToken}`;
 
-    const headlineList = (headlines || []).map(h =>
-      `<tr>
-        <td style="padding:12px 0;border-bottom:1px solid #e5e5e5;">
-          <div style="font-weight:600;font-size:15px;color:#000;margin-bottom:4px;">${h.title}</div>
-          <div style="font-size:14px;color:#464646;line-height:1.5;margin-bottom:4px;">${h.summary}</div>
-          <a href="${h.source_url}" style="font-size:12px;color:#C8963E;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;">Read at ${h.source_name} &rarr;</a>
+    const headlineList = (headlines || []).map(h => {
+      const tagsHtml = Array.isArray(h.tags)
+        ? h.tags.map(t => `<span style="display:inline-block;font-family:'Inter',Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.6px;background:#f0f2f5;color:#0a1d3c;padding:3px 8px;border-radius:999px;text-transform:uppercase;margin:0 4px 4px 0;line-height:1.2;">${t}</span>`).join('')
+        : '';
+      return `<tr>
+        <td style="padding:16px 0;border-bottom:1px solid #e5e5e5;">
+          <div style="font-weight:600;font-size:15px;color:#000;margin-bottom:8px;line-height:1.25;">${h.title}</div>
+          ${tagsHtml ? `<div style="margin-bottom:8px;">${tagsHtml}</div>` : ''}
+          <div style="font-size:14px;color:#464646;line-height:1.5;margin-bottom:8px;">${h.summary}</div>
+          <a href="${h.source_url}" style="font-size:12px;color:#C8963E;text-transform:uppercase;letter-spacing:0.1em;text-decoration:underline;text-decoration-color:#C8963E;">Read at ${h.source_name} &rarr;</a>
         </td>
-      </tr>`
-    ).join('');
+      </tr>`;
+    }).join('');
 
     const emailHtml = `
     <div style="max-width:600px;margin:0 auto;font-family:'Inter',Helvetica,Arial,sans-serif;color:#000;">
@@ -71,7 +75,8 @@ module.exports = async function handler(req, res) {
       </div>
       <div style="padding:24px;">
         <h1 style="font-size:22px;font-weight:700;margin:0 0 8px;color:#000;">${post_title}</h1>
-        <p style="font-size:13px;color:#464646;margin:0 0 20px;">${edition_date}</p>
+        <p style="font-size:13px;color:#464646;margin:0 0 12px;">${edition_date}</p>
+        <p style="font-size:14px;font-style:italic;color:#333;margin:0 0 20px;line-height:1.5;">${dek || 'Some of the top stories moving in pro pickleball today.'}</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e5e5e5;">
           ${headlineList}
         </table>
