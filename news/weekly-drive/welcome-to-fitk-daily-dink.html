@@ -194,6 +194,17 @@
             <button type="submit" class="btn btn-primary">Sign Me Up</button>
           </form>
         </div>
+        <\!-- Daily Dink Subscribe -->
+        <div class="footer-column footer-signup-col">
+          <h3>The Daily Dink</h3>
+          <p>Pickleball news delivered to your inbox every morning. Free.</p>
+          <form id="dink-subscribe-form" class="footer-signup-form" onsubmit="handleDinkSubscribe(event)" novalidate>
+            <input type="text" id="dink-first-name" name="first_name" placeholder="First Name (optional)" autocomplete="given-name" style="margin-bottom:8px;">
+            <input type="email" id="dink-email" name="email" placeholder="Email Address..." required autocomplete="email">
+            <button type="submit" class="btn btn-primary" id="dink-submit-btn">Subscribe Free</button>
+          </form>
+          <p id="dink-signup-message" style="display:none;font-size:13px;color:#555;margin-top:10px;line-height:1.5;"></p>
+        </div>
         <div class="footer-column">
           <h3>Shop</h3>
           <ul>
@@ -258,6 +269,54 @@
         btn.textContent = 'Link copied!';
         setTimeout(() => { btn.textContent = original; }, 2000);
       });
+    }
+  </script>
+  <script>
+    // Daily Dink subscribe form
+    async function handleDinkSubscribe(event) {
+      event.preventDefault();
+      const emailEl   = document.getElementById('dink-email');
+      const nameEl    = document.getElementById('dink-first-name');
+      const messageEl = document.getElementById('dink-signup-message');
+      const submitBtn = document.getElementById('dink-submit-btn');
+      const form      = document.getElementById('dink-subscribe-form');
+      const email      = (emailEl.value || '').trim();
+      const first_name = (nameEl.value || '').trim();
+      if (\!email || \!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        messageEl.style.color = '#c0392b';
+        messageEl.textContent = 'Please enter a valid email address.';
+        messageEl.style.display = 'block';
+        emailEl.focus();
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Subscribing...';
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, first_name }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          form.style.display = 'none';
+          messageEl.style.color = '#2e7d32';
+          messageEl.textContent = data.message || 'Almost there\! Check your inbox to confirm.';
+          messageEl.style.display = 'block';
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Subscribe Free';
+          messageEl.style.color = '#c0392b';
+          messageEl.textContent = data.error || 'Something went wrong. Please try again.';
+          messageEl.style.display = 'block';
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Subscribe Free';
+        messageEl.style.color = '#c0392b';
+        messageEl.textContent = 'Connection error. Please try again.';
+        messageEl.style.display = 'block';
+      }
     }
   </script>
 </body>
