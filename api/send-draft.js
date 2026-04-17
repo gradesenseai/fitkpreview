@@ -84,7 +84,7 @@ module.exports = async function handler(req, res) {
           <a href="${approveLink}" style="display:inline-block;background:#C8963E;color:#fff;padding:14px 40px;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;">APPROVE AND PUBLISH</a>
         </div>
         <p style="text-align:center;font-size:12px;color:#999;margin-top:16px;">
-          Tap above to publish this edition to faithinthekitchen.com/news/. If you want changes, reply to this email or open Cowork.
+          Tap above to publish this edition to faithinthekitchen.com/news/. To pause today's subscriber send, reply with the word HOLD. For edits, open Cowork.
         </p>
       </div>
       <div style="background:#f5f5f0;padding:16px 24px;text-align:center;">
