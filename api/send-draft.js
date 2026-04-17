@@ -102,6 +102,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         from: process.env.RESEND_FROM || 'FITK Daily Dink <team@faithinthekitchen.com>',
         to: [process.env.REVIEW_EMAIL || 'team@faithinthekitchen.com'],
+        reply_to: 'hold@inbound.faithinthekitchen.com',
         subject: `FITK Daily Dink Draft - ${edition_date}`,
         html: emailHtml
       })
