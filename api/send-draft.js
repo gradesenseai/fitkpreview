@@ -54,9 +54,33 @@ module.exports = async function handler(req, res) {
     const siteUrl = process.env.SITE_URL || 'https://faithinthekitchen.com';
     const approveLink = `${siteUrl}/api/approve?token=${approveToken}`;
 
+    // Normalize a tag value to a plain string. Tags may arrive as strings
+    // ("Legal") or as objects ({ name: "Legal" }, { label: "Legal" }, etc.)
+    // depending on how the upstream builder serialized Supabase rows.
+    const tagToString = (t) => {
+      if (t == null) return '';
+      if (typeof t === 'string') return t;
+      if (typeof t === 'number' || typeof t === 'boolean') return String(t);
+      if (typeof t === 'object') {
+        return t.name || t.label || t.text || t.value || t.tag || t.title || '';
+      }
+      return '';
+    };
+
+    const escapeHtml = (s) => String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
     const headlineList = (headlines || []).map(h => {
       const tagsHtml = Array.isArray(h.tags)
-        ? h.tags.map(t => `<span style="display:inline-block;font-family:'Inter',Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.6px;background:#f0f2f5;color:#0a1d3c;padding:3px 8px;border-radius:999px;text-transform:uppercase;margin:0 4px 4px 0;line-height:1.2;">${t}</span>`).join('')
+        ? h.tags
+            .map(tagToString)
+            .filter(Boolean)
+            .map(t => `<span style="display:inline-block;font-family:'Inter',Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.6px;background:#f0f2f5;color:#0a1d3c;padding:3px 8px;border-radius:999px;text-transform:uppercase;margin:0 4px 4px 0;line-height:1.2;">${escapeHtml(t)}</span>`)
+            .join('')
         : '';
       return `<tr>
         <td style="padding:16px 0;border-bottom:1px solid #e5e5e5;">
