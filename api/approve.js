@@ -60,18 +60,33 @@ module.exports = async function handler(req, res) {
     const indexFile = await indexRes.json();
     const indexContent = Buffer.from(indexFile.content, 'base64').toString('utf-8');
 
-    // 3. Insert the card_html into the news grid (before the closing </div> of news-grid)
-    const gridMarker = '<!-- END_NEWS_GRID -->';
+    // 3. Insert card_html at the TOP of the news grid (newest first).
+    //    Prefer a BEGIN_NEWS_GRID marker; fall back to inserting right after
+    //    the <div class="news-grid" ...> opening tag; last resort, before END.
+    const beginMarker = '<!-- BEGIN_NEWS_GRID -->';
+    const endMarker = '<!-- END_NEWS_GRID -->';
     let updatedIndex;
-    if (indexContent.includes(gridMarker)) {
-      updatedIndex = indexContent.replace(gridMarker, draft.card_html + '\n\n      ' + gridMarker);
-    } else {
-      // Fallback: insert before the closing </div> of the news-grid section
-      const fallbackMarker = '</div>\n  </section>';
+    if (indexContent.includes(beginMarker)) {
       updatedIndex = indexContent.replace(
-        fallbackMarker,
-        draft.card_html + '\n\n    </div>\n  </section>'
+        beginMarker,
+        beginMarker + '\n\n      ' + draft.card_html
       );
+    } else {
+      const gridOpenRe = /(<div[^>]*class="[^"]*\bnews-grid\b[^"]*"[^>]*>)/;
+      if (gridOpenRe.test(indexContent)) {
+        updatedIndex = indexContent.replace(
+          gridOpenRe,
+          (m) => m + '\n\n      ' + draft.card_html
+        );
+      } else if (indexContent.includes(endMarker)) {
+        updatedIndex = indexContent.replace(
+          endMarker,
+          draft.card_html + '\n\n      ' + endMarker
+        );
+      } else {
+        return sendPage(res, 500, 'Publish Failed',
+          'Could not find the news grid in news/index.html to insert the card.');
+      }
     }
 
     // 4. Commit both files atomically via GitHub Git Trees API
@@ -155,7 +170,11 @@ module.exports = async function handler(req, res) {
           base_tree: baseTreeSha,
           tree: [
             {
-              path: `news/${draft.slug}.html`,
+              // Nested-by-column path. Scheduler now emits slug as the
+              // edition date only (e.g. "2026-04-18"). If we ever get an
+              // old-style slug like "2026-04-18-daily-dink", strip the
+              // suffix so the file lands at news/daily-dink/2026-04-18.html.
+              path: `news/daily-dink/${String(draft.slug).replace(/-daily-dink$/, '')}.html`,
               mode: '100644',
               type: 'blob',
               sha: postBlob.sha
@@ -229,9 +248,10 @@ module.exports = async function handler(req, res) {
     );
 
     // 6. Success page
+    const liveSlug = String(draft.slug).replace(/-daily-dink$/, '');
     return sendPage(res, 200, 'Published',
       `FITK Daily Dink for ${draft.edition_date} is live. Vercel will deploy in about 30 seconds.<br><br>` +
-      `<a href="https://faithinthekitchen.com/news/${draft.slug}.html" style="color:#C8963E;">View the post &rarr;</a>`
+      `<a href="https://faithinthekitchen.com/news/daily-dink/${liveSlug}.html" style="color:#C8963E;">View the post &rarr;</a>`
     );
 
   } catch (err) {
