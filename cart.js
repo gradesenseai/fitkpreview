@@ -141,17 +141,21 @@ async function addToCart(productId, color, size) {
       return;
     }
 
-    // Find matching variant by size
+    // Find matching variant by size AND color
     const variant = product.variants.edges.find(function(edge) {
       const v = edge.node;
-      return v.selectedOptions.some(function(opt) {
-        return opt.name.toLowerCase() === 'size' && opt.value.toLowerCase() === size.toLowerCase();
+      var sizeMatch = false;
+      var colorMatch = false;
+      v.selectedOptions.forEach(function(opt) {
+        if (opt.name.toLowerCase() === 'size' && opt.value.toLowerCase() === size.toLowerCase()) sizeMatch = true;
+        if (opt.name.toLowerCase() === 'color' && opt.value.toLowerCase() === color.toLowerCase()) colorMatch = true;
       });
+      return sizeMatch && colorMatch;
     });
 
     if (!variant) {
-      console.error('FITK Cart: Variant not found for size:', size);
-      showCartNotification('This size is currently unavailable.');
+      console.error('FITK Cart: Variant not found for color:', color, 'size:', size);
+      showCartNotification('This color/size combination is currently unavailable.');
       return;
     }
 

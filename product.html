@@ -396,7 +396,7 @@
 
       // Add to cart
       document.getElementById('add-to-cart').addEventListener('click', function() {
-        const selectedColor = document.querySelector('.swatch.active').getAttribute('data-color');
+        const selectedColor = document.querySelector('.swatch.active').getAttribute('title');
         const selectedSize = document.querySelector('.size-btn.active').textContent;
         addToCart(product.id, selectedColor, selectedSize);
       });
