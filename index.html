@@ -241,7 +241,7 @@
       if (!container || typeof products === 'undefined') return;
 
       // Pick a signature colorway for each product (index into colorways array)
-      const signatureColorIndex = [1, 2, 0, 3, 4, 0]; // olive, slate, grey, mauve, aqua, maroon
+      const signatureColorIndex = [1, 2, 0, 3, 1, 0]; // olive, slate, grey, mauve, olive, black
 
       // Custom card model images for homepage grid
       const cardModelImages = {
@@ -249,7 +249,7 @@
         'servp': 'images/card_models/serve_slate.png',
         'sgsg': 'images/card_models/sgsf_grey.png',
         '4glory': 'images/card_models/4glory_mauve.png',
-        'drop': 'images/card_models/drop_aqua.png'
+        'drop': 'images/card_models/aqua_olive.png'
       };
 
       const tees = products.filter(p => p.category === 'tee');
@@ -294,13 +294,8 @@
         'heather-olive': '#6B7F5B',
         'heather-slate': '#708090',
         'heather-mauve': '#C49BA3',
-        'heather-aqua': '#7FCCCC',
-        'heather-blue': '#8DB6CD',
         'black': '#1A1A1A',
-        'charcoal': '#333333',
-        'maroon': '#6B2737',
-        'rose': '#C4A4A7',
-        'grey': '#6B6B6B'
+        'rose': '#C4A4A7'
       };
       return colors[code] || '#999999';
     }
