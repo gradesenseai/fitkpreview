@@ -1,29 +1,58 @@
-// /api/send-draft.js
-// Called by the scheduled Cowork task after building a Daily Dink draft.
-// Stores the draft in Supabase, then emails it to Mark for approval via Resend.
+// /api/resend-draft.js
+// Resend the approval email for an existing pending draft. Reads the row from
+// Supabase (so we don't have to re-POST the full post_html payload) and fires
+// the same Resend email used by /api/send-draft. Auth-gated with the same
+// x-api-key used by the scheduled task.
+//
+// Usage:
+//   POST /api/resend-draft
+//     headers: x-api-key: <DRAFT_API_SECRET>
+//     body:    { "edition_date": "2026-04-21" }   OR   { "token": "<approve_token>" }
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Simple auth: shared secret so only the scheduled task can call this
   const authHeader = req.headers['x-api-key'];
   if (authHeader !== process.env.DRAFT_API_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   try {
-    const { edition_date, slug, post_title, dek, post_html, card_html } = req.body;
-    let { headlines } = req.body;
-
-    if (!edition_date || !slug || !post_title || !post_html || !card_html) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    const { edition_date, token } = req.body || {};
+    if (!edition_date && !token) {
+      return res.status(400).json({ error: 'Provide edition_date or token' });
     }
 
-    // Normalize headline shape so a scheduler drift (e.g. {url, source, preview})
-    // doesn't render "undefined" in the approval email. Canonical shape is:
-    //   { title, summary, source_url, source_name, tags }
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+    // 1. Look up the draft
+    const query = token
+      ? `approve_token=eq.${encodeURIComponent(token)}`
+      : `edition_date=eq.${encodeURIComponent(edition_date)}&status=eq.pending&order=created_at.desc&limit=1`;
+
+    const lookupRes = await fetch(
+      `${supabaseUrl}/rest/v1/daily_dink_drafts?${query}&select=id,edition_date,post_title,approve_token,headlines`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      }
+    );
+    if (!lookupRes.ok) {
+      const err = await lookupRes.text();
+      return res.status(500).json({ error: 'Supabase lookup failed', detail: err });
+    }
+    const rows = await lookupRes.json();
+    if (!rows.length) {
+      return res.status(404).json({ error: 'No matching pending draft found' });
+    }
+    const draft = rows[0];
+
+    // 2. Normalize headline shape (same fallback keys as send-draft.js).
     const pickFirst = (obj, keys) => {
       for (const k of keys) {
         if (obj && obj[k] != null && obj[k] !== '') return obj[k];
@@ -40,45 +69,14 @@ module.exports = async function handler(req, res) {
         tags:        Array.isArray(h.tags) ? h.tags : []
       };
     };
-    headlines = Array.isArray(headlines) ? headlines.map(normalizeHeadline) : [];
+    const headlines = Array.isArray(draft.headlines)
+      ? draft.headlines.map(normalizeHeadline)
+      : [];
 
-    // 1. Store draft in Supabase
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
-
-    const insertRes = await fetch(`${supabaseUrl}/rest/v1/daily_dink_drafts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({
-        edition_date,
-        slug,
-        post_title,
-        post_html,
-        card_html,
-        headlines: headlines || []
-      })
-    });
-
-    if (!insertRes.ok) {
-      const err = await insertRes.text();
-      return res.status(500).json({ error: 'Supabase insert failed', detail: err });
-    }
-
-    const [draft] = await insertRes.json();
-    const approveToken = draft.approve_token;
-
-    // 2. Build the email HTML
+    // 3. Build email (same markup as send-draft.js)
     const siteUrl = process.env.SITE_URL || 'https://faithinthekitchen.com';
-    const approveLink = `${siteUrl}/api/approve?token=${approveToken}`;
+    const approveLink = `${siteUrl}/api/approve?token=${draft.approve_token}`;
 
-    // Normalize a tag value to a plain string. Tags may arrive as strings
-    // ("Legal") or as objects ({ name: "Legal" }, { label: "Legal" }, etc.)
-    // depending on how the upstream builder serialized Supabase rows.
     const tagToString = (t) => {
       if (t == null) return '';
       if (typeof t === 'string') return t;
@@ -88,7 +86,6 @@ module.exports = async function handler(req, res) {
       }
       return '';
     };
-
     const escapeHtml = (s) => String(s)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -96,7 +93,7 @@ module.exports = async function handler(req, res) {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
 
-    const headlineList = (headlines || []).map(h => {
+    const headlineList = headlines.map(h => {
       const tagsHtml = Array.isArray(h.tags)
         ? h.tags
             .map(tagToString)
@@ -120,9 +117,9 @@ module.exports = async function handler(req, res) {
         <span style="color:#C8963E;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;">FITK DAILY DINK</span>
       </div>
       <div style="padding:24px;">
-        <h1 style="font-size:22px;font-weight:700;margin:0 0 8px;color:#000;">${post_title}</h1>
-        <p style="font-size:13px;color:#464646;margin:0 0 12px;">${edition_date}</p>
-        <p style="font-size:14px;font-style:italic;color:#333;margin:0 0 20px;line-height:1.5;">${dek || 'Some of the top stories moving in pro pickleball today.'}</p>
+        <h1 style="font-size:22px;font-weight:700;margin:0 0 8px;color:#000;">${draft.post_title}</h1>
+        <p style="font-size:13px;color:#464646;margin:0 0 12px;">${draft.edition_date}</p>
+        <p style="font-size:14px;font-style:italic;color:#333;margin:0 0 20px;line-height:1.5;">Some of the top stories moving in pro pickleball today.</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e5e5e5;">
           ${headlineList}
         </table>
@@ -134,11 +131,10 @@ module.exports = async function handler(req, res) {
         </p>
       </div>
       <div style="background:#f5f5f0;padding:16px 24px;text-align:center;">
-        <span style="font-size:11px;color:#999;">Faith in the Kitchen - Draft Review</span>
+        <span style="font-size:11px;color:#999;">Faith in the Kitchen - Draft Review (resend)</span>
       </div>
     </div>`;
 
-    // 3. Send via Resend
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -149,7 +145,7 @@ module.exports = async function handler(req, res) {
         from: process.env.RESEND_FROM || 'FITK Daily Dink <team@faithinthekitchen.com>',
         to: [process.env.REVIEW_EMAIL || 'team@faithinthekitchen.com'],
         reply_to: 'hold@inbound.faithinthekitchen.com',
-        subject: `FITK Daily Dink Draft - ${edition_date}`,
+        subject: `FITK Daily Dink Draft - ${draft.edition_date} (resend)`,
         html: emailHtml
       })
     });
@@ -162,7 +158,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({
       success: true,
       draft_id: draft.id,
-      approve_token: approveToken,
+      edition_date: draft.edition_date,
       approve_link: approveLink
     });
 
