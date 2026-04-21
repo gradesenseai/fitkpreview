@@ -181,6 +181,19 @@ async function addToCart(productId, color, size) {
     sessionStorage.setItem('fitk_cart_id', shopifyCart.id);
     updateCartCount();
     showCartNotification('Added to cart');
+
+    // Meta Pixel - AddToCart event
+    if (typeof fbq === 'function') {
+      var priceAmount = variant.node.price ? parseFloat(variant.node.price.amount) : 0;
+      fbq('track', 'AddToCart', {
+        content_ids: [productId],
+        content_name: handle,
+        content_type: 'product',
+        value: priceAmount,
+        currency: 'USD'
+      });
+    }
+
     openCartDrawer();
 
   } catch (err) {
@@ -221,6 +234,25 @@ async function removeCartItem(lineItemId) {
 // ============================================================
 function goToCheckout() {
   if (shopifyReady && shopifyCart && shopifyCart.checkoutUrl) {
+    // Meta Pixel - InitiateCheckout event
+    if (typeof fbq === 'function') {
+      var checkoutValue = shopifyCart.cost && shopifyCart.cost.subtotalAmount ? parseFloat(shopifyCart.cost.subtotalAmount.amount) : 0;
+      var contentIds = [];
+      if (shopifyCart.lines && shopifyCart.lines.edges) {
+        shopifyCart.lines.edges.forEach(function(edge) {
+          if (edge.node && edge.node.merchandise && edge.node.merchandise.id) {
+            contentIds.push(edge.node.merchandise.id);
+          }
+        });
+      }
+      fbq('track', 'InitiateCheckout', {
+        content_ids: contentIds,
+        content_type: 'product',
+        num_items: contentIds.length,
+        value: checkoutValue,
+        currency: 'USD'
+      });
+    }
     window.location.href = shopifyCart.checkoutUrl;
   } else if (placeholderCart.length > 0) {
     showCartNotification('Checkout is not available yet. Please try again.');

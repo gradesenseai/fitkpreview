@@ -3,6 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1322528483075450');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1322528483075450&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
   <title>Product - Faith in the Kitchen Pickleball Apparel</title>
   <meta name="description" content="Faith-driven pickleball apparel. Scripture-embedded designs on premium materials. Free shipping on orders $75+.">
   <meta name="robots" content="index, follow">
@@ -89,6 +106,16 @@
     <div class="section-container">
       <div class="product-detail-container" id="product-detail">
         <!-- Product content loaded by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- On the Court - Social Proof (hidden until testimonials are collected) -->
+  <section class="social-proof-section" id="on-the-court" style="display:none;">
+    <div class="section-container">
+      <h2 class="social-proof-heading">On the Court</h2>
+      <div class="social-proof-grid" id="social-proof-content">
+        <!-- Testimonials will be added here -->
       </div>
     </div>
   </section>
@@ -572,6 +599,17 @@
           schemaScript.type = 'application/ld+json';
           schemaScript.textContent = JSON.stringify(schema);
           document.head.appendChild(schemaScript);
+
+          // Meta Pixel - ViewContent event
+          if (typeof fbq === 'function') {
+            fbq('track', 'ViewContent', {
+              content_ids: [product.id],
+              content_name: product.name,
+              content_type: 'product',
+              value: product.price,
+              currency: 'USD'
+            });
+          }
         } else {
           document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>';
         }
