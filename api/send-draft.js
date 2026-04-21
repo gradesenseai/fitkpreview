@@ -14,10 +14,10 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { edition_date, slug, post_title, dek, post_html, card_html } = req.body;
-    let { headlines } = req.body;
+    const { edition_date, slug, post_title, dek, post_html } = req.body;
+    let { headlines, card_html } = req.body;
 
-    if (!edition_date || !slug || !post_title || !post_html || !card_html) {
+    if (!edition_date || !slug || !post_title || !post_html) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -41,6 +41,42 @@ module.exports = async function handler(req, res) {
       };
     };
     headlines = Array.isArray(headlines) ? headlines.map(normalizeHeadline) : [];
+
+    // Always rebuild card_html server-side from canonical template so scheduler
+    // drift on the card markup (missing image placeholder, wrong class names,
+    // data-filter vs data-category, etc.) cannot reach the live archive grid.
+    // We ignore whatever the scheduler sent for card_html.
+    const displayDate = (() => {
+      try {
+        const d = new Date(`${edition_date}T12:00:00Z`);
+        const months = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+        return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+      } catch (e) {
+        return edition_date;
+      }
+    })();
+    const escapeAttr = (s) => String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    const cardExcerpt = dek && String(dek).trim()
+      ? String(dek).trim()
+      : `Today's top stories in pro pickleball.`;
+    card_html = `      <a href="daily-dink/${slug}.html" class="news-card" data-category="daily-dink">
+        <div class="news-card-image">
+          <div class="news-card-image-placeholder">DAILY DINK | <span style="font-size:0.6em; letter-spacing:0.05em;">${escapeAttr(displayDate)}</span></div>
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-meta">
+            <span class="news-card-category">Daily Dink</span>
+          </div>
+          <h3 class="news-card-title">${escapeAttr(post_title)}</h3>
+          <p class="news-card-excerpt">${escapeAttr(cardExcerpt)}</p>
+          <span class="news-card-readmore">Read More &rarr;</span>
+        </div>
+      </a>`;
 
     // 1. Store draft in Supabase
     const supabaseUrl = process.env.SUPABASE_URL;
