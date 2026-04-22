@@ -39,7 +39,10 @@ const CORE_PAGES = [
 ];
 
 // Files inside /news/ that should NOT be indexed (templates, stubs).
-const NEWS_EXCLUDE = new Set(['index.html', '_post-template.html']);
+// Top-level /news/index.html is the hub, already added via CORE_PAGES.
+// Nested index.html files (e.g. /news/tag/index.html tag cloud) ARE indexed.
+const NEWS_EXCLUDE_BASENAMES = new Set(['_post-template.html']);
+const NEWS_EXCLUDE_PATHS = new Set(['index.html']); // paths relative to /news/
 
 function isoDate(mtime) {
   return mtime.toISOString().slice(0, 10);
@@ -62,9 +65,13 @@ function collectNewsPosts() {
   const posts = [];
   for (const file of walk(NEWS_DIR)) {
     const base = path.basename(file);
-    // Skip excluded top-level files (index.html, _post-template.html).
+    const relFromNews = path.relative(NEWS_DIR, file).split(path.sep).join('/');
+    // Skip basenames that are never indexable (templates).
+    // Skip specific paths relative to /news/ (top-level news hub, covered by CORE_PAGES).
     // Underscore-prefixed files anywhere are treated as private.
-    if (NEWS_EXCLUDE.has(base) || base.startsWith('_')) continue;
+    if (NEWS_EXCLUDE_BASENAMES.has(base)) continue;
+    if (NEWS_EXCLUDE_PATHS.has(relFromNews)) continue;
+    if (base.startsWith('_')) continue;
 
     const rel = path.relative(ROOT, file).split(path.sep).join('/');
     const stat = fs.statSync(file);

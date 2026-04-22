@@ -11,5 +11,8 @@ else
   echo "WARNING: SHOPIFY_STOREFRONT_TOKEN not set. Cart will run in placeholder mode."
 fi
 
+echo "Regenerating tag archive pages from current /news/ contents..."
+node generate-tags.js
+
 echo "Regenerating sitemap.xml from current /news/ contents..."
 node generate-sitemap.js
