@@ -59,6 +59,15 @@ module.exports = async function handler(req, res) {
     const draft = drafts[0];
     log(`draft id=${draft.id} edition=${draft.edition_date} slug=${draft.slug}`);
 
+    // Normalize logo: scheduler may emit the uncommitted icon filename; swap for the
+    // deployed primary logo so headers never render broken regardless of scheduler version.
+    if (draft.post_html) {
+      draft.post_html = draft.post_html.replace(
+        /images\/logos\/2026-02-11_FIK-Logo-Icon\.png/g,
+        'images/logos/FIK_Logo_Primary_CR.png'
+      );
+    }
+
     // 2. Try direct push to main (fast path). On any failure fall through to PR path.
     const liveSlug = String(draft.slug).replace(/-daily-dink$/, '');
     const postPath = `news/daily-dink/${liveSlug}.html`;
